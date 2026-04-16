@@ -4,7 +4,6 @@ import com.rochak.payflow.dto.ChangePasswordDto;
 import com.rochak.payflow.dto.request.CreateUserRequestDTO;
 import com.rochak.payflow.dto.request.UserRequestDTO;
 import com.rochak.payflow.dto.response.UserResponseDTO;
-import com.rochak.payflow.entity.User;
 
 import java.util.List;
 

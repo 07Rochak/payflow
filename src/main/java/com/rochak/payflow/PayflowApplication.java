@@ -17,7 +17,7 @@ public class PayflowApplication {
 	@Bean
 	CommandLineRunner run(UserRepository repo) {
 		return args -> {
-			repo.save(new User(null, "Rochak", "rochak@gmail.com"));
+			repo.save(new User(null, "Rochak", "rochak@gmail.com", "ABCD1234"));
 		};
 	}
 

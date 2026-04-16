@@ -8,13 +8,13 @@ import com.rochak.payflow.entity.User;
 import com.rochak.payflow.exception.ResourceNotFoundException;
 import com.rochak.payflow.mapper.UserMapper;
 import com.rochak.payflow.repository.UserRepository;
-import com.rochak.payflow.security.SecurityConfig;
 import com.rochak.payflow.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,11 +30,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO createUser(CreateUserRequestDTO userDTO) {
-        if(userRepository.findByEmail(userDTO.getEmail())!=null){
+        if(userRepository.existsByEmail(userDTO.getEmail())){
             throw new RuntimeException("Email already exists");
         }
         User user = UserMapper.mapToNewEntity(userDTO);
-        UserResponseDTO savedUserDto = UserMapper.mapToResponse(user);
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        User savedUser = userRepository.save(user);
+        UserResponseDTO savedUserDto = UserMapper.mapToResponse(savedUser);
         return savedUserDto;
     }
 
@@ -57,7 +59,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDTO getUserByEmail(String email) {
-        User user = userRepository.findByEmail(email);
+        User user = Optional.ofNullable(userRepository.findByEmail(email))
+                .orElseThrow(()-> new ResourceNotFoundException("User not found"));
         return UserMapper.mapToResponse(user);
     }
 
@@ -69,7 +72,6 @@ public class UserServiceImpl implements UserService {
                 );
         user.setName(userRequestDTO.getName());
         user.setEmail(userRequestDTO.getEmail());
-        user.setPassword(userRequestDTO.getPassword());
         User savedUser = userRepository.save(user);
         UserResponseDTO userResponseDTO = UserMapper.mapToResponse(savedUser);
         return userResponseDTO;
