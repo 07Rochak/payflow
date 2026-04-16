@@ -1,5 +1,7 @@
 package com.rochak.payflow.controller;
 
+import com.rochak.payflow.dto.ChangePasswordDto;
+import com.rochak.payflow.dto.request.CreateUserRequestDTO;
 import com.rochak.payflow.dto.request.UserRequestDTO;
 import com.rochak.payflow.dto.response.UserResponseDTO;
 import com.rochak.payflow.service.UserService;
@@ -19,7 +21,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO userRequestDTO){
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody CreateUserRequestDTO userRequestDTO){
         UserResponseDTO userResponseDTO = userService.createUser(userRequestDTO);
         return new ResponseEntity<>(userResponseDTO, HttpStatus.CREATED);
     }
@@ -44,5 +46,12 @@ public class UserController {
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
         userService.deleteUser(id);
         return new ResponseEntity<>("User deleted successfully",HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}/change-password")
+    public ResponseEntity<String> changePassword(@PathVariable Long id,
+                               @RequestBody @Valid ChangePasswordDto request) {
+        userService.changePassword(id, request);
+        return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
     }
 }

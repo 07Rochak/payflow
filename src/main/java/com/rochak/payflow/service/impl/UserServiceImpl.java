@@ -1,13 +1,17 @@
 package com.rochak.payflow.service.impl;
 
+import com.rochak.payflow.dto.ChangePasswordDto;
+import com.rochak.payflow.dto.request.CreateUserRequestDTO;
 import com.rochak.payflow.dto.request.UserRequestDTO;
 import com.rochak.payflow.dto.response.UserResponseDTO;
 import com.rochak.payflow.entity.User;
 import com.rochak.payflow.exception.ResourceNotFoundException;
 import com.rochak.payflow.mapper.UserMapper;
 import com.rochak.payflow.repository.UserRepository;
+import com.rochak.payflow.security.SecurityConfig;
 import com.rochak.payflow.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,14 +22,19 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
+    private BCryptPasswordEncoder passwordEncoder;
+
+//    public UserServiceImpl(BCryptPasswordEncoder passwordEncoder){
+//        this.passwordEncoder=passwordEncoder;
+//            }
+
     @Override
-    public UserResponseDTO createUser(UserRequestDTO userDTO) {
+    public UserResponseDTO createUser(CreateUserRequestDTO userDTO) {
         if(userRepository.findByEmail(userDTO.getEmail())!=null){
             throw new RuntimeException("Email already exists");
         }
-        User user = UserMapper.mapToEntity(userDTO);
-        User savedUser = userRepository.save(user);
-        UserResponseDTO savedUserDto = UserMapper.mapToResponse(savedUser);
+        User user = UserMapper.mapToNewEntity(userDTO);
+        UserResponseDTO savedUserDto = UserMapper.mapToResponse(user);
         return savedUserDto;
     }
 
@@ -73,6 +82,19 @@ public class UserServiceImpl implements UserService {
                         () -> new ResourceNotFoundException("No user with id: "+id)
                 );
         userRepository.delete(user);
+    }
+
+    @Override
+    public void changePassword(Long userId, ChangePasswordDto request) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("No user with id: "+userId)
+                );
+        if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
+            throw new RuntimeException("Old password is incorrect");
+        }
+        user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
     }
 
 }
