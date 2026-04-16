@@ -3,6 +3,7 @@ package com.rochak.payflow.service.impl;
 import com.rochak.payflow.dto.request.UserRequestDTO;
 import com.rochak.payflow.dto.response.UserResponseDTO;
 import com.rochak.payflow.entity.User;
+import com.rochak.payflow.exception.ResourceNotFoundException;
 import com.rochak.payflow.mapper.UserMapper;
 import com.rochak.payflow.repository.UserRepository;
 import com.rochak.payflow.service.UserService;
@@ -29,6 +30,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponseDTO getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("No user with id: "+id)
+                );
+        return UserMapper.mapToResponse(user);
+    }
+
+    @Override
     public List<UserResponseDTO> getAllUsers() {
         List<User> users= userRepository.findAll();
         return users.stream()
@@ -46,7 +56,7 @@ public class UserServiceImpl implements UserService {
     public UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO) {
         User user = userRepository.findById(id)
                 .orElseThrow(
-                        () -> new RuntimeException("No user with id: "+id)
+                        () -> new ResourceNotFoundException("No user with id: "+id)
                 );
         user.setName(userRequestDTO.getName());
         user.setEmail(userRequestDTO.getEmail());
@@ -60,7 +70,7 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(
-                        () -> new RuntimeException("No user with id: "+id)
+                        () -> new ResourceNotFoundException("No user with id: "+id)
                 );
         userRepository.delete(user);
     }
