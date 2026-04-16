@@ -1,7 +1,9 @@
 package com.rochak.payflow.service.impl;
 
-import com.rochak.payflow.dto.UserDTO;
+import com.rochak.payflow.dto.request.UserRequestDTO;
+import com.rochak.payflow.dto.response.UserResponseDTO;
 import com.rochak.payflow.entity.User;
+import com.rochak.payflow.mapper.UserMapper;
 import com.rochak.payflow.repository.UserRepository;
 import com.rochak.payflow.service.UserService;
 import lombok.AllArgsConstructor;
@@ -16,39 +18,27 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public UserDTO createUser(UserDTO userDTO) {
-        User user = mapToUser(userDTO);
+    public UserResponseDTO createUser(UserRequestDTO userDTO) {
         if(userRepository.findByEmail(userDTO.getEmail())!=null){
             throw new RuntimeException("Email already exists");
         }
+        User user = UserMapper.mapToEntity(userDTO);
         User savedUser = userRepository.save(user);
-        UserDTO savedUserDto = mapToUserDto(savedUser);
+        UserResponseDTO savedUserDto = UserMapper.mapToResponse(savedUser);
         return savedUserDto;
     }
 
     @Override
-    public List<UserDTO> getAllUsers() {
+    public List<UserResponseDTO> getAllUsers() {
         List<User> users= userRepository.findAll();
         return users.stream()
-                .map((user) -> mapToUserDto(user))
+                .map((user) -> UserMapper.mapToResponse(user))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public UserDTO getUserByEmail(String email) {
+    public UserResponseDTO getUserByEmail(String email) {
         User user = userRepository.findByEmail(email);
-        return mapToUserDto(user);
-    }
-
-    private UserDTO mapToUserDto(User user){
-        return new UserDTO(user.getName(), user.getEmail(), user.getPassword());
-    }
-
-    private User mapToUser(UserDTO userDTO){
-        User user = new User();
-        user.setEmail(userDTO.getName());
-        user.setName(userDTO.getEmail());
-        user.setPassword(user.getPassword());
-        return user;
+        return UserMapper.mapToResponse(user);
     }
 }

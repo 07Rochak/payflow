@@ -1,13 +1,14 @@
 package com.rochak.payflow.service;
 
-import com.rochak.payflow.dto.UserDTO;
+import com.rochak.payflow.dto.request.UserRequestDTO;
+import com.rochak.payflow.dto.response.UserResponseDTO;
 
 import java.util.List;
 
 public interface UserService {
-    UserDTO createUser(UserDTO user);
+    UserResponseDTO createUser(UserRequestDTO user);
 
-    List<UserDTO> getAllUsers();
+    List<UserResponseDTO> getAllUsers();
 
-    UserDTO getUserByEmail(String email);
+    UserResponseDTO getUserByEmail(String email);
 }
