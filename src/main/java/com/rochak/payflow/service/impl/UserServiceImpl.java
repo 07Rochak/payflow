@@ -41,4 +41,28 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email);
         return UserMapper.mapToResponse(user);
     }
+
+    @Override
+    public UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO) {
+        User user = userRepository.findById(id)
+                .orElseThrow(
+                        () -> new RuntimeException("No user with id: "+id)
+                );
+        user.setName(userRequestDTO.getName());
+        user.setEmail(userRequestDTO.getEmail());
+        user.setPassword(userRequestDTO.getPassword());
+        User savedUser = userRepository.save(user);
+        UserResponseDTO userResponseDTO = UserMapper.mapToResponse(savedUser);
+        return userResponseDTO;
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(
+                        () -> new RuntimeException("No user with id: "+id)
+                );
+        userRepository.delete(user);
+    }
+
 }
