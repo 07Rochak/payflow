@@ -5,9 +5,11 @@ import com.rochak.payflow.dto.request.CreateUserRequestDTO;
 import com.rochak.payflow.dto.request.UserRequestDTO;
 import com.rochak.payflow.dto.response.UserResponseDTO;
 import com.rochak.payflow.entity.User;
+import com.rochak.payflow.entity.Wallet;
 import com.rochak.payflow.exception.ResourceNotFoundException;
 import com.rochak.payflow.mapper.UserMapper;
 import com.rochak.payflow.repository.UserRepository;
+import com.rochak.payflow.repository.WalletRepository;
 import com.rochak.payflow.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,6 +26,8 @@ public class UserServiceImpl implements UserService {
 
     private BCryptPasswordEncoder passwordEncoder;
 
+    private WalletRepository walletRepository;
+
 //    public UserServiceImpl(BCryptPasswordEncoder passwordEncoder){
 //        this.passwordEncoder=passwordEncoder;
 //            }
@@ -36,6 +40,11 @@ public class UserServiceImpl implements UserService {
         User user = UserMapper.mapToNewEntity(userDTO);
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         User savedUser = userRepository.save(user);
+
+        Wallet wallet = new Wallet();
+        wallet.setUser(savedUser);
+        wallet.setBalance(0.0);
+        walletRepository.save(wallet);
         UserResponseDTO savedUserDto = UserMapper.mapToResponse(savedUser);
         return savedUserDto;
     }

@@ -14,11 +14,11 @@ public class PayflowApplication {
 		SpringApplication.run(PayflowApplication.class, args);
 	}
 
-	@Bean
-	CommandLineRunner run(UserRepository repo) {
-		return args -> {
-			repo.save(new User(null, "Rochak", "rochak@gmail.com", "ABCD1234"));
-		};
-	}
+//	@Bean
+//	CommandLineRunner run(UserRepository repo) {
+//		return args -> {
+//			repo.save(new User(null, "Rochak", "rochak@gmail.com", "ABCD1234"));
+//		};
+//	}
 
 }
