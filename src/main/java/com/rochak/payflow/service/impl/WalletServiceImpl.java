@@ -41,22 +41,22 @@ public class WalletServiceImpl implements WalletService {
     @Override
     @Transactional
     public WalletResponseDTO transferMoney(TransferRequestDTO transferRequestDTO) {
-        Wallet first, second;
-        if (transferRequestDTO.getFromUserId() < transferRequestDTO.getToUserId()) {
-            first = walletRepository.findByUser_Id(transferRequestDTO.getFromUserId()).orElseThrow(
-                    ()-> new ResourceNotFoundException("Wallet not found")
-            );
-            second = walletRepository.findByUser_Id(transferRequestDTO.getToUserId()).orElseThrow(
-                    ()-> new ResourceNotFoundException("Wallet not found")
-            );
-        } else {
-            first = walletRepository.findByUser_Id(transferRequestDTO.getToUserId()).orElseThrow(
-                    ()-> new ResourceNotFoundException("Wallet not found")
-            );
-            second = walletRepository.findByUser_Id(transferRequestDTO.getFromUserId()).orElseThrow(
-                    ()-> new ResourceNotFoundException("Wallet not found")
-            );
-        }
+//        Wallet first, second;
+//        if (transferRequestDTO.getFromUserId() < transferRequestDTO.getToUserId()) {
+//            first = walletRepository.findByUser_Id(transferRequestDTO.getFromUserId()).orElseThrow(
+//                    ()-> new ResourceNotFoundException("Wallet not found")
+//            );
+//            second = walletRepository.findByUser_Id(transferRequestDTO.getToUserId()).orElseThrow(
+//                    ()-> new ResourceNotFoundException("Wallet not found")
+//            );
+//        } else {
+//            first = walletRepository.findByUser_Id(transferRequestDTO.getToUserId()).orElseThrow(
+//                    ()-> new ResourceNotFoundException("Wallet not found")
+//            );
+//            second = walletRepository.findByUser_Id(transferRequestDTO.getFromUserId()).orElseThrow(
+//                    ()-> new ResourceNotFoundException("Wallet not found")
+//            );
+//        }
         Wallet sender = walletRepository.findByUser_Id(transferRequestDTO.getFromUserId())
                 .orElseThrow(
                         ()-> new ResourceNotFoundException("Wallet not found")
