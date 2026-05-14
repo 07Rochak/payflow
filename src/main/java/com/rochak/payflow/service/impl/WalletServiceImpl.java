@@ -3,19 +3,24 @@ package com.rochak.payflow.service.impl;
 import com.rochak.payflow.dto.request.AddMoneyRequestDTO;
 import com.rochak.payflow.dto.request.TransferRequestDTO;
 import com.rochak.payflow.dto.response.WalletResponseDTO;
+import com.rochak.payflow.entity.Transaction;
 import com.rochak.payflow.entity.Wallet;
 import com.rochak.payflow.exception.ResourceNotFoundException;
 import com.rochak.payflow.mapper.WalletMapper;
+import com.rochak.payflow.repository.TransactionRepository;
 import com.rochak.payflow.repository.WalletRepository;
 import com.rochak.payflow.service.WalletService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @AllArgsConstructor
 @Service
 public class WalletServiceImpl implements WalletService {
     private WalletRepository walletRepository;
+    private final TransactionRepository transactionRepository;
 
     @Override
     public WalletResponseDTO getWalletByUserId(long userId) {
@@ -79,6 +84,15 @@ public class WalletServiceImpl implements WalletService {
         receiver.setBalance(receiver.getBalance()+ transferRequestDTO.getAmount());
         Wallet savedSender = walletRepository.save(sender);
         walletRepository.save(receiver);
+        Transaction transaction = Transaction.builder()
+                .senderWallet(sender)
+                .receiverWallet(receiver)
+                .amount(transferRequestDTO.getAmount())
+                .transactionType("TRANSFER")
+                .status("SUCCESS")
+                .createdAt(LocalDateTime.now())
+                .build();
+        transactionRepository.save(transaction);
         return WalletMapper.mapToResponse(savedSender);
     }
 }
