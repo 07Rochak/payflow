@@ -62,7 +62,7 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     @Transactional
-    public WalletResponseDTO transferMoney(TransferRequestDTO transferRequestDTO) {
+    public WalletResponseDTO transferMoney(String email, TransferRequestDTO transferRequestDTO) {
 //        Wallet first, second;
 //        if (transferRequestDTO.getFromUserId() < transferRequestDTO.getToUserId()) {
 //            first = walletRepository.findByUser_Id(transferRequestDTO.getFromUserId()).orElseThrow(
@@ -79,7 +79,11 @@ public class WalletServiceImpl implements WalletService {
 //                    ()-> new ResourceNotFoundException("Wallet not found")
 //            );
 //        }
-        Wallet sender = walletRepository.findByUser_Id(transferRequestDTO.getFromUserId())
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(
+                        () -> new UsernameNotFoundException("User not found")
+                );
+        Wallet sender = walletRepository.findByUser_Id(user.getId())
                 .orElseThrow(
                         ()-> new ResourceNotFoundException("Wallet not found")
                 );
@@ -89,7 +93,7 @@ public class WalletServiceImpl implements WalletService {
                         ()-> new ResourceNotFoundException("Wallet not found")
                 );
 
-        if(transferRequestDTO.getFromUserId().equals(transferRequestDTO.getToUserId())){
+        if(user.getId().equals(transferRequestDTO.getToUserId())){
             throw new RuntimeException("Cannot transfer to same user");
         }
 

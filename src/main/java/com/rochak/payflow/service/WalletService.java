@@ -8,5 +8,5 @@ public interface WalletService {
     WalletResponseDTO getWalletByUserId(long userId);
     WalletResponseDTO getWalletByEmail(String email);
     WalletResponseDTO addMoney(Long userId, AddMoneyRequestDTO request);
-    WalletResponseDTO transferMoney(TransferRequestDTO transferRequestDTO);
+    WalletResponseDTO transferMoney(String email, TransferRequestDTO transferRequestDTO);
 }

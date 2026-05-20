@@ -6,14 +6,14 @@ import lombok.Data;
 
 @Data
 public class TransferRequestDTO {
+//
+//    @NotNull
+//    private Long fromUserId;
 
-    @NotNull
-    private Long fromUserId;
-
-    @NotNull
+    @NotNull(message = "Reiever user id required")
     private Long toUserId;
 
-    @NotNull
-    @Min(1)
+    @NotNull(message = "Amount required")
+    @Min(value = 1, message = "Amount must be greater than 0")
     private Double amount;
 }

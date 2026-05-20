@@ -31,6 +31,7 @@ public class WalletController {
 
     @PostMapping("/transfer")
     public ResponseEntity<WalletResponseDTO> transferMoney(@RequestBody @Valid TransferRequestDTO requestDTO){
-        return new ResponseEntity<>(walletService.transferMoney(requestDTO), HttpStatus.OK);
+        String email = SecurityUtils.getCurrentUserEmail();
+        return new ResponseEntity<>(walletService.transferMoney(email, requestDTO), HttpStatus.OK);
     }
 }
