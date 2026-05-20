@@ -28,7 +28,12 @@ public class WalletServiceImpl implements WalletService {
                 .orElseThrow(
                         ()-> new ResourceNotFoundException("Wallet not found")
                 );
-        return WalletMapper.mapToResponse(wallet);
+//        return WalletMapper.mapToResponse(wallet);
+        return WalletResponseDTO.builder()
+                .walletId(wallet.getId())
+                .balance(wallet.getBalance())
+                .userId(wallet.getId())
+                .build();
     }
 
     @Override
@@ -40,7 +45,12 @@ public class WalletServiceImpl implements WalletService {
                 );
         wallet.setBalance(wallet.getBalance() + request.getAmount());
         walletRepository.save(wallet);
-        return WalletMapper.mapToResponse(wallet);
+//        return WalletMapper.mapToResponse(wallet);
+        return WalletResponseDTO.builder()
+                .walletId(wallet.getId())
+                .balance(wallet.getBalance())
+                .userId(wallet.getId())
+                .build();
     }
 
     @Override
@@ -93,6 +103,11 @@ public class WalletServiceImpl implements WalletService {
                 .createdAt(LocalDateTime.now())
                 .build();
         transactionRepository.save(transaction);
-        return WalletMapper.mapToResponse(savedSender);
+//        return WalletMapper.mapToResponse(savedSender);
+        return WalletResponseDTO.builder()
+                .walletId(savedSender.getId())
+                .balance(savedSender.getBalance())
+                .userId(savedSender.getId())
+                .build();
     }
 }

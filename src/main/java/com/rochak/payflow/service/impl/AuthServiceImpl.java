@@ -20,7 +20,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponseDTO login(LoginRequestDTO request) {
-        User user = userRepository.findByEmail(request.getEmail());
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(
+                        () -> new RuntimeException("Invalid email or password")
+                );
         if (user == null){
             throw new RuntimeException("Invalid email or password");
         }

@@ -18,6 +18,7 @@ public class WalletController {
 
     @GetMapping("/{id}")
     public ResponseEntity<WalletResponseDTO> getWallet(@PathVariable Long id){
+        System.out.println("Wallet endpoint hit");
         return new ResponseEntity<>(walletService.getWalletByUserId(id), HttpStatus.OK);
     }
 
