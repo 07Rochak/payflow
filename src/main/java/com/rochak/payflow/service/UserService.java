@@ -4,6 +4,7 @@ import com.rochak.payflow.dto.ChangePasswordDto;
 import com.rochak.payflow.dto.request.CreateUserRequestDTO;
 import com.rochak.payflow.dto.request.UserRequestDTO;
 import com.rochak.payflow.dto.response.UserResponseDTO;
+import com.rochak.payflow.entity.User;
 
 import java.util.List;
 
@@ -21,4 +22,6 @@ public interface UserService {
     void deleteUser(Long id);
 
     void changePassword(Long userId, ChangePasswordDto request);
+
+    User getUserByEmailId(String email);
 }

@@ -108,4 +108,11 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    @Override
+    public User getUserByEmailId(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new ResourceNotFoundException("User not found"));
+        return user;
+    }
+
 }

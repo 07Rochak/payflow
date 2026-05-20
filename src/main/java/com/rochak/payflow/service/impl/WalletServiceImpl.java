@@ -4,14 +4,17 @@ import com.rochak.payflow.dto.request.AddMoneyRequestDTO;
 import com.rochak.payflow.dto.request.TransferRequestDTO;
 import com.rochak.payflow.dto.response.WalletResponseDTO;
 import com.rochak.payflow.entity.Transaction;
+import com.rochak.payflow.entity.User;
 import com.rochak.payflow.entity.Wallet;
 import com.rochak.payflow.exception.ResourceNotFoundException;
 import com.rochak.payflow.mapper.WalletMapper;
 import com.rochak.payflow.repository.TransactionRepository;
+import com.rochak.payflow.repository.UserRepository;
 import com.rochak.payflow.repository.WalletRepository;
 import com.rochak.payflow.service.WalletService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,6 +23,7 @@ import java.time.LocalDateTime;
 @Service
 public class WalletServiceImpl implements WalletService {
     private WalletRepository walletRepository;
+    private UserRepository userRepository;
     private final TransactionRepository transactionRepository;
 
     @Override
@@ -28,12 +32,20 @@ public class WalletServiceImpl implements WalletService {
                 .orElseThrow(
                         ()-> new ResourceNotFoundException("Wallet not found")
                 );
-//        return WalletMapper.mapToResponse(wallet);
-        return WalletResponseDTO.builder()
-                .walletId(wallet.getId())
-                .balance(wallet.getBalance())
-                .userId(wallet.getId())
-                .build();
+        return WalletMapper.mapToResponse(wallet);
+    }
+
+    @Override
+    public WalletResponseDTO getWalletByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(
+                        () -> new UsernameNotFoundException("User not found")
+                );
+        Wallet wallet = walletRepository.findByUser_Id(user.getId())
+                .orElseThrow(
+                        ()-> new ResourceNotFoundException("Wallet not found")
+                );
+        return WalletMapper.mapToResponse(wallet);
     }
 
     @Override
@@ -45,12 +57,7 @@ public class WalletServiceImpl implements WalletService {
                 );
         wallet.setBalance(wallet.getBalance() + request.getAmount());
         walletRepository.save(wallet);
-//        return WalletMapper.mapToResponse(wallet);
-        return WalletResponseDTO.builder()
-                .walletId(wallet.getId())
-                .balance(wallet.getBalance())
-                .userId(wallet.getId())
-                .build();
+        return WalletMapper.mapToResponse(wallet);
     }
 
     @Override
@@ -103,11 +110,6 @@ public class WalletServiceImpl implements WalletService {
                 .createdAt(LocalDateTime.now())
                 .build();
         transactionRepository.save(transaction);
-//        return WalletMapper.mapToResponse(savedSender);
-        return WalletResponseDTO.builder()
-                .walletId(savedSender.getId())
-                .balance(savedSender.getBalance())
-                .userId(savedSender.getId())
-                .build();
+        return WalletMapper.mapToResponse(savedSender);
     }
 }
