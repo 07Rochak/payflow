@@ -26,27 +26,27 @@ public class UserController {
         return new ResponseEntity<>(userResponseDTO, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id){
-        UserResponseDTO userResponseDTO = userService.getUserById(id);
-        return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
-    }
-
-    @GetMapping
-    public ResponseEntity<List<UserResponseDTO>> getAllUsers(){
-        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<UserResponseDTO> udpateUser(@PathVariable Long id, @Valid @RequestBody UserRequestDTO userRequestDTO){
-        return new ResponseEntity<>(userService.updateUser(id, userRequestDTO), HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id){
-        userService.deleteUser(id);
-        return new ResponseEntity<>("User deleted successfully",HttpStatus.OK);
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id){
+//        UserResponseDTO userResponseDTO = userService.getUserById(id);
+//        return new ResponseEntity<>(userResponseDTO, HttpStatus.OK);
+//    }
+//
+//    @GetMapping
+//    public ResponseEntity<List<UserResponseDTO>> getAllUsers(){
+//        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+//    }
+//
+//    @PutMapping("/{id}")
+//    public ResponseEntity<UserResponseDTO> udpateUser(@PathVariable Long id, @Valid @RequestBody UserRequestDTO userRequestDTO){
+//        return new ResponseEntity<>(userService.updateUser(id, userRequestDTO), HttpStatus.OK);
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<String> deleteUser(@PathVariable Long id){
+//        userService.deleteUser(id);
+//        return new ResponseEntity<>("User deleted successfully",HttpStatus.OK);
+//    }
 
     @PutMapping("/{id}/change-password")
     public ResponseEntity<String> changePassword(@PathVariable Long id,
