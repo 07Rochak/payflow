@@ -27,6 +27,8 @@ public class SecurityDisableConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**")
                         .permitAll()
+                        .requestMatchers("/api/users")
+                        .permitAll()
                         .anyRequest()
                         .authenticated()
                 )

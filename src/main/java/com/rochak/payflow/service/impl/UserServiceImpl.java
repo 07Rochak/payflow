@@ -4,6 +4,7 @@ import com.rochak.payflow.dto.ChangePasswordDto;
 import com.rochak.payflow.dto.request.CreateUserRequestDTO;
 import com.rochak.payflow.dto.request.UserRequestDTO;
 import com.rochak.payflow.dto.response.UserResponseDTO;
+import com.rochak.payflow.entity.Role;
 import com.rochak.payflow.entity.User;
 import com.rochak.payflow.entity.Wallet;
 import com.rochak.payflow.exception.ResourceNotFoundException;
@@ -39,6 +40,7 @@ public class UserServiceImpl implements UserService {
         }
         User user = UserMapper.mapToNewEntity(userDTO);
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setRole(Role.USER);
         User savedUser = userRepository.save(user);
 
         Wallet wallet = new Wallet();
