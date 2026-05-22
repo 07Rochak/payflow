@@ -1,6 +1,7 @@
 package com.rochak.payflow.controller;
 
 import com.rochak.payflow.dto.response.TransactionResponseDTO;
+import com.rochak.payflow.security.SecurityUtils;
 import com.rochak.payflow.service.TransactionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +18,10 @@ import java.util.List;
 public class TransactionController {
     private final TransactionService transactionService;
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<TransactionResponseDTO>> getTransactionHistoryByUserId(@PathVariable Long userId)
+    @GetMapping("/user/me")
+    public ResponseEntity<List<TransactionResponseDTO>> getTransactionHistoryByUserId()
     {
-        return ResponseEntity.ok(transactionService.getTransactionByUserId(userId));
+        String email = SecurityUtils.getCurrentUserEmail();
+        return ResponseEntity.ok(transactionService.getTransactionByUserId(email));
     }
 }
