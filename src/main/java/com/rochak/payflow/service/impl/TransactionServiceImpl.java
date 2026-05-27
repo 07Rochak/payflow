@@ -22,7 +22,7 @@ public class TransactionServiceImpl implements TransactionService {
     private final UserRepository userRepository;
 
     @Override
-    public List<TransactionResponseDTO> getTransactionByUserId(String email) {
+    public List<TransactionResponseDTO> getTransactionByEmailId(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(
                         () -> new UsernameNotFoundException("User not found")
@@ -31,6 +31,28 @@ public class TransactionServiceImpl implements TransactionService {
         List<Transaction> transactions = transactionRepository.findBySenderWallet_User_IdOrReceiverWallet_User_Id(
                 userId, userId
         );
+        return transactions.stream()
+                .map(TransactionMapper::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TransactionResponseDTO> getTransactionByUserId(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(
+                        ()-> new UsernameNotFoundException("User not found")
+                );
+        List<Transaction> transactions = transactionRepository.findBySenderWallet_User_IdOrReceiverWallet_User_Id(
+                user.getId(), user.getId()
+        );
+        return transactions.stream()
+                .map(TransactionMapper::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TransactionResponseDTO> getAllTransactions() {
+        List<Transaction> transactions = transactionRepository.findAll();
         return transactions.stream()
                 .map(TransactionMapper::mapToResponse)
                 .collect(Collectors.toList());

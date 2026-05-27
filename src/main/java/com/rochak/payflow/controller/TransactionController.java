@@ -22,6 +22,6 @@ public class TransactionController {
     public ResponseEntity<List<TransactionResponseDTO>> getTransactionHistoryByUserId()
     {
         String email = SecurityUtils.getCurrentUserEmail();
-        return ResponseEntity.ok(transactionService.getTransactionByUserId(email));
+        return ResponseEntity.ok(transactionService.getTransactionByEmailId(email));
     }
 }

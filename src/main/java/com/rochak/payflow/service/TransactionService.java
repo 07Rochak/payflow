@@ -5,5 +5,7 @@ import com.rochak.payflow.dto.response.TransactionResponseDTO;
 import java.util.List;
 
 public interface TransactionService {
-    List<TransactionResponseDTO> getTransactionByUserId(String email);
+    List<TransactionResponseDTO> getTransactionByEmailId(String email);
+    List<TransactionResponseDTO> getTransactionByUserId(Long id);
+    List<TransactionResponseDTO> getAllTransactions();
 }

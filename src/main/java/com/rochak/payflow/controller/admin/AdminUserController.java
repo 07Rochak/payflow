@@ -1,4 +1,4 @@
-package com.rochak.payflow.controller;
+package com.rochak.payflow.controller.admin;
 
 import com.rochak.payflow.dto.response.UserResponseDTO;
 import com.rochak.payflow.service.UserService;
