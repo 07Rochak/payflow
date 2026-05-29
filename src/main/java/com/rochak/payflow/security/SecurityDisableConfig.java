@@ -31,7 +31,7 @@ public class SecurityDisableConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/wallets/**", "/api/transactions/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/api/wallets/**", "/api/transactions/**", "/api/payments/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest()
                         .authenticated()
                 )

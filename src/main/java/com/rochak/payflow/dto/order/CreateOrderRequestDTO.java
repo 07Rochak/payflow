@@ -8,5 +8,5 @@ import lombok.Data;
 public class CreateOrderRequestDTO {
     @NotNull
     @Min(1)
-    private double amount;
+    private Double amount;
 }
