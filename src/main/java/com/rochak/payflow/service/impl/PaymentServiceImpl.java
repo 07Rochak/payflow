@@ -8,15 +8,21 @@ import com.rochak.payflow.dto.order.CreateOrderRequestDTO;
 import com.rochak.payflow.dto.order.CreateOrderResponseDTO;
 import com.rochak.payflow.dto.request.AddMoneyRequestDTO;
 import com.rochak.payflow.dto.request.PaymentVerificationRequestDTO;
+import com.rochak.payflow.entity.Payment;
+import com.rochak.payflow.entity.PaymentStatus;
 import com.rochak.payflow.entity.User;
 import com.rochak.payflow.exception.ResourceNotFoundException;
+import com.rochak.payflow.repository.PaymentRepository;
 import com.rochak.payflow.repository.UserRepository;
+import com.rochak.payflow.security.SecurityUtils;
 import com.rochak.payflow.service.PaymentService;
 import com.rochak.payflow.service.WalletService;
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +31,8 @@ public class PaymentServiceImpl implements PaymentService {
     private final RazorpayClient razorpayClient;
     private final WalletService walletService;
     private final UserRepository userRepository;
+    private final PaymentRepository paymentRepository;
+
     @Value("${razorpay.key.id}")
     private String keyId;
 
@@ -40,6 +48,21 @@ public class PaymentServiceImpl implements PaymentService {
             options.put("receipt", "receipt_"+System.currentTimeMillis());
 
             Order order = razorpayClient.orders.create(options);
+
+            User user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail())
+                    .orElseThrow(
+                            ()->new ResourceNotFoundException("User not found")
+                    );
+
+            Payment payment = Payment.builder()
+                    .razorpayOrderId(order.get("id"))
+                    .amount(request.getAmount())
+                    .status(PaymentStatus.PENDING)
+                    .user(user)
+                    .createdAt(LocalDateTime.now())
+                    .build();
+
+            paymentRepository.save(payment);
 
             return CreateOrderResponseDTO
                     .builder()
@@ -63,31 +86,34 @@ public class PaymentServiceImpl implements PaymentService {
 
             boolean isValid = Utils.verifyPaymentSignature(options, keySecret);
 
-            System.out.println(request.getRazorpayOrderId());
-            System.out.println(request.getRazorpayPaymentId());
-            System.out.println(request.getRazorpaySignature());
-            System.out.println("key secret: "+keySecret);
-
             if(!isValid){
                 throw new RuntimeException(
                         "Invalid payment signature"
                 );
             }
 
-            System.out.println("valid: "+isValid);
             User user = userRepository.findByEmail(email)
                     .orElseThrow(
                             ()-> new ResourceNotFoundException("User not found")
                     );
 
-            AddMoneyRequestDTO requestDTO = new AddMoneyRequestDTO();
+            Payment payment = paymentRepository.findByRazorpayOrderId(request.getRazorpayOrderId())
+                            .orElseThrow(
+                                    ()-> new ResourceNotFoundException("Payment not found")
+                            );
+            if(payment.getStatus() == PaymentStatus.SUCCESS){
+                throw new RuntimeException("Payment already processed");
+            }
 
-            requestDTO.setAmount(request.getAmount());
-            System.out.println("starting add money");
-            walletService.addMoney(user.getId(), requestDTO);
-            System.out.println("add money completed");
+            payment.setRazorpayPaymentId(request.getRazorpayPaymentId());
+            payment.setStatus(PaymentStatus.SUCCESS);
+            paymentRepository.save(payment);
+
+            AddMoneyRequestDTO dto = new AddMoneyRequestDTO();
+            dto.setAmount(payment.getAmount());
+
+            walletService.addMoney(payment.getUser().getId(), dto);
         } catch (RazorpayException e){
-            System.out.println("payment verification failed");
             e.printStackTrace();
             throw new RuntimeException("Payment verification failed", e);
         }

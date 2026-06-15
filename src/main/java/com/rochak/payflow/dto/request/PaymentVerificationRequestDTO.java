@@ -1,5 +1,6 @@
 package com.rochak.payflow.dto.request;
 
+import com.rochak.payflow.repository.PaymentRepository;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -15,5 +16,5 @@ public class PaymentVerificationRequestDTO {
     @NotBlank
     private String razorpaySignature;
 
-    private Double amount;
+    private final PaymentRepository paymentRepository;
 }
