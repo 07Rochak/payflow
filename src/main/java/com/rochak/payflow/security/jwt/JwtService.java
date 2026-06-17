@@ -22,6 +22,9 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private long jwtExpiration;
 
+    @Value("${jwt.refresh-expiration}")
+    private long refreshExpiration;
+
     private SecretKey key;
 
     @PostConstruct
@@ -62,5 +65,16 @@ public class JwtService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public String generateRefreshToken(String email) {
+        return Jwts.builder()
+                .subject(email)
+                .issuedAt(new Date())
+                .expiration(
+                        new Date(System.currentTimeMillis() + refreshExpiration)
+                )
+                .signWith(key)
+                .compact();
     }
 }

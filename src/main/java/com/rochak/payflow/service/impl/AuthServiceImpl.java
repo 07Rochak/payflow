@@ -2,7 +2,9 @@ package com.rochak.payflow.service.impl;
 
 import com.rochak.payflow.dto.auth.AuthResponseDTO;
 import com.rochak.payflow.dto.auth.LoginRequestDTO;
+import com.rochak.payflow.entity.RefreshToken;
 import com.rochak.payflow.entity.User;
+import com.rochak.payflow.repository.RefreshTokenRepository;
 import com.rochak.payflow.repository.UserRepository;
 import com.rochak.payflow.security.jwt.JwtService;
 import com.rochak.payflow.service.AuthService;
@@ -10,11 +12,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
@@ -38,8 +43,25 @@ public class AuthServiceImpl implements AuthService {
         }
 
         String token = jwtService.generateToken(user.getEmail(), user.getRole().name());
+
+        String refreshToken = jwtService.generateRefreshToken(user.getEmail());
+
+        RefreshToken refreshTokenEntity = RefreshToken.builder()
+                .token(refreshToken)
+                .user(user)
+                .expiryDate(LocalDateTime.now().plusDays(7))
+                .revoked(false)
+                .build();
+
+        refreshTokenRepository
+                .findByUser(user)
+                .ifPresent(refreshTokenRepository::delete);
+
+        refreshTokenRepository.save(refreshTokenEntity);
+
         return AuthResponseDTO.builder()
-                .token(token)
+                .accessToken(token)
+                .refreshToken(refreshToken)
                 .build();
     }
 
