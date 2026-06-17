@@ -65,35 +65,56 @@ public class WalletServiceImpl implements WalletService {
     @Override
     @Transactional
     public WalletResponseDTO transferMoney(String email, TransferRequestDTO transferRequestDTO) {
-//        Wallet first, second;
-//        if (transferRequestDTO.getFromUserId() < transferRequestDTO.getToUserId()) {
-//            first = walletRepository.findByUser_Id(transferRequestDTO.getFromUserId()).orElseThrow(
-//                    ()-> new ResourceNotFoundException("Wallet not found")
-//            );
-//            second = walletRepository.findByUser_Id(transferRequestDTO.getToUserId()).orElseThrow(
-//                    ()-> new ResourceNotFoundException("Wallet not found")
-//            );
-//        } else {
-//            first = walletRepository.findByUser_Id(transferRequestDTO.getToUserId()).orElseThrow(
-//                    ()-> new ResourceNotFoundException("Wallet not found")
-//            );
-//            second = walletRepository.findByUser_Id(transferRequestDTO.getFromUserId()).orElseThrow(
-//                    ()-> new ResourceNotFoundException("Wallet not found")
-//            );
-//        }
         User user = userRepository.findByEmail(email)
                 .orElseThrow(
                         () -> new UsernameNotFoundException("User not found")
                 );
-        Wallet sender = walletRepository.findByUser_Id(user.getId())
-                .orElseThrow(
-                        ()-> new ResourceNotFoundException("Wallet not found")
-                );
 
-        Wallet receiver = walletRepository.findByUser_Id(transferRequestDTO.getToUserId())
-                .orElseThrow(
-                        ()-> new ResourceNotFoundException("Wallet not found")
-                );
+        Long senderUserId = user.getId();
+        Long receiverUserId = transferRequestDTO.getToUserId();
+
+        // locking system
+        Wallet first;
+        Wallet second;
+
+        if(senderUserId<receiverUserId){
+            first = walletRepository
+                    .findUserIdForUpdate(senderUserId)
+                    .orElseThrow(
+                            () -> new ResourceNotFoundException("Wallet not found")
+                    );
+            second = walletRepository
+                    .findUserIdForUpdate(senderUserId)
+                    .orElseThrow(
+                            () -> new ResourceNotFoundException("Wallet not found")
+                    );
+        }
+        else {
+            first = walletRepository
+                    .findUserIdForUpdate(receiverUserId)
+                    .orElseThrow(
+                            () -> new ResourceNotFoundException("Wallet not found")
+                    );
+            second =walletRepository
+                    .findUserIdForUpdate(senderUserId)
+                    .orElseThrow(
+                            ()-> new ResourceNotFoundException("Wallet not found")
+                    );
+        }
+
+        Wallet sender = first.getUser().getId().equals(senderUserId) ? first : second;
+
+        Wallet  receiver = second.getUser().getId().equals(receiverUserId) ? second : first;
+
+//        Wallet sender = walletRepository.findByUser_Id(user.getId())
+//                .orElseThrow(
+//                        ()-> new ResourceNotFoundException("Wallet not found")
+//                );
+//
+//        Wallet receiver = walletRepository.findByUser_Id(transferRequestDTO.getToUserId())
+//                .orElseThrow(
+//                        ()-> new ResourceNotFoundException("Wallet not found")
+//                );
 
         if(user.getId().equals(transferRequestDTO.getToUserId())){
             throw new RuntimeException("Cannot transfer to same user");
