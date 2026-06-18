@@ -2,6 +2,7 @@ package com.rochak.payflow.controller;
 
 import com.rochak.payflow.dto.auth.AuthResponseDTO;
 import com.rochak.payflow.dto.auth.LoginRequestDTO;
+import com.rochak.payflow.dto.request.RefreshTokenRequestDto;
 import com.rochak.payflow.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,5 +24,8 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(request));
     }
 
-
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid RefreshTokenRequestDto token){
+        return ResponseEntity.ok(authService.refreshToken(token));
+    }
 }
