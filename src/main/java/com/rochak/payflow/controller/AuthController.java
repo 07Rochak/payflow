@@ -2,6 +2,7 @@ package com.rochak.payflow.controller;
 
 import com.rochak.payflow.dto.auth.AuthResponseDTO;
 import com.rochak.payflow.dto.auth.LoginRequestDTO;
+import com.rochak.payflow.dto.request.LogoutRequestDto;
 import com.rochak.payflow.dto.request.RefreshTokenRequestDto;
 import com.rochak.payflow.service.AuthService;
 import jakarta.validation.Valid;
@@ -27,5 +28,12 @@ public class AuthController {
     @PostMapping("/refresh")
     public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid RefreshTokenRequestDto token){
         return ResponseEntity.ok(authService.refreshToken(token));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestBody @Valid LogoutRequestDto request){
+        authService.logout(request);
+
+        return ResponseEntity.ok("Logged out successfully");
     }
 }

@@ -2,6 +2,7 @@ package com.rochak.payflow.service.impl;
 
 import com.rochak.payflow.dto.auth.AuthResponseDTO;
 import com.rochak.payflow.dto.auth.LoginRequestDTO;
+import com.rochak.payflow.dto.request.LogoutRequestDto;
 import com.rochak.payflow.dto.request.RefreshTokenRequestDto;
 import com.rochak.payflow.entity.RefreshToken;
 import com.rochak.payflow.entity.User;
@@ -91,6 +92,17 @@ public class AuthServiceImpl implements AuthService {
                         refreshToken.getToken()
                 )
                 .build();
+    }
+
+    @Override
+    public void logout(LogoutRequestDto request) {
+        RefreshToken refreshToken = refreshTokenRepository.findByToken(request.getRefreshToken())
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Refresh token not found")
+                );
+
+        refreshToken.setRevoked(true);
+        refreshTokenRepository.save(refreshToken);
     }
 
 }
