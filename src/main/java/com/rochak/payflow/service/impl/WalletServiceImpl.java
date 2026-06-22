@@ -3,9 +3,7 @@ package com.rochak.payflow.service.impl;
 import com.rochak.payflow.dto.request.AddMoneyRequestDTO;
 import com.rochak.payflow.dto.request.TransferRequestDTO;
 import com.rochak.payflow.dto.response.WalletResponseDTO;
-import com.rochak.payflow.entity.Transaction;
-import com.rochak.payflow.entity.User;
-import com.rochak.payflow.entity.Wallet;
+import com.rochak.payflow.entity.*;
 import com.rochak.payflow.exception.ResourceNotFoundException;
 import com.rochak.payflow.mapper.WalletMapper;
 import com.rochak.payflow.repository.TransactionRepository;
@@ -58,6 +56,16 @@ public class WalletServiceImpl implements WalletService {
                         ()-> new ResourceNotFoundException("Wallet not found")
                 );
         wallet.setBalance(wallet.getBalance() + request.getAmount());
+        Transaction transaction = Transaction.builder()
+                .receiverWallet(wallet)
+                .amount(request.getAmount())
+                .transactionType(TransactionType.DEPOSIT)
+                .status(TransactionStatus.SUCCESS)
+                .category(TransactionCategory.CREDIT)
+                .description("Adding money to wallet")
+                .createdAt(LocalDateTime.now())
+                .build();
+        transactionRepository.save(transaction);
         walletRepository.save(wallet);
         return WalletMapper.mapToResponse(wallet);
     }
@@ -84,7 +92,7 @@ public class WalletServiceImpl implements WalletService {
                             () -> new ResourceNotFoundException("Wallet not found")
                     );
             second = walletRepository
-                    .findUserIdForUpdate(senderUserId)
+                    .findUserIdForUpdate(receiverUserId)
                     .orElseThrow(
                             () -> new ResourceNotFoundException("Wallet not found")
                     );
@@ -132,8 +140,10 @@ public class WalletServiceImpl implements WalletService {
                 .senderWallet(sender)
                 .receiverWallet(receiver)
                 .amount(transferRequestDTO.getAmount())
-                .transactionType("TRANSFER")
-                .status("SUCCESS")
+                .transactionType(TransactionType.TRANSFER)
+                .status(TransactionStatus.SUCCESS)
+                .category(TransactionCategory.TRANSFER)
+                .description("Transfer from "+sender.getUser().getEmail()+" to "+receiver.getUser().getEmail())
                 .createdAt(LocalDateTime.now())
                 .build();
         transactionRepository.save(transaction);

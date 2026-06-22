@@ -15,4 +15,6 @@ public class TransactionResponseDTO {
     private String transactionType;
     private String status;
     private LocalDateTime createdAt;
+    private String category;
+    private String description;
 }

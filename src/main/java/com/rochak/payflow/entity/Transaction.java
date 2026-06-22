@@ -29,12 +29,20 @@ public class Transaction {
     @Column(nullable = false)
     private Double amount;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String transactionType;
+    private TransactionType transactionType;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String status;
+    private TransactionStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private TransactionCategory category;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @Column(length = 255)
+    private String description;
 }
