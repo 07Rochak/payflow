@@ -2,8 +2,10 @@ package com.rochak.payflow.service.impl;
 
 import com.rochak.payflow.dto.request.AddMoneyRequestDTO;
 import com.rochak.payflow.dto.request.TransferRequestDTO;
+import com.rochak.payflow.dto.request.WithdrawRequestDto;
 import com.rochak.payflow.dto.response.WalletResponseDTO;
 import com.rochak.payflow.entity.*;
+import com.rochak.payflow.exception.InsufficientBalanceException;
 import com.rochak.payflow.exception.ResourceNotFoundException;
 import com.rochak.payflow.mapper.WalletMapper;
 import com.rochak.payflow.repository.TransactionRepository;
@@ -148,5 +150,41 @@ public class WalletServiceImpl implements WalletService {
                 .build();
         transactionRepository.save(transaction);
         return WalletMapper.mapToResponse(savedSender);
+    }
+
+    @Override
+    @Transactional
+    public WalletResponseDTO withdrawMoney(String email, WithdrawRequestDto request) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(
+                        ()-> new ResourceNotFoundException("User not found")
+                );
+
+        Long id = user.getId();
+
+        Wallet wallet = walletRepository.findByUser_Id(id)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException("Wallet not found")
+                );
+
+        if(wallet.getBalance().compareTo(request.getAmount())<0){
+            throw new InsufficientBalanceException("Insufficient wallet balance");
+        }
+
+        wallet.setBalance(wallet.getBalance() - request.getAmount());
+
+        Transaction transaction = Transaction.builder()
+                .senderWallet(wallet)
+                .amount(request.getAmount())
+                .transactionType(TransactionType.WITHDRAWAL)
+                .status(TransactionStatus.SUCCESS)
+                .category(TransactionCategory.DEBIT)
+                .description("Wallet withdrawal")
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        walletRepository.save(wallet);
+        transactionRepository.save(transaction);
+        return WalletMapper.mapToResponse(wallet);
     }
 }

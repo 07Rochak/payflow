@@ -2,6 +2,7 @@ package com.rochak.payflow.controller;
 
 import com.rochak.payflow.dto.request.AddMoneyRequestDTO;
 import com.rochak.payflow.dto.request.TransferRequestDTO;
+import com.rochak.payflow.dto.request.WithdrawRequestDto;
 import com.rochak.payflow.dto.response.WalletResponseDTO;
 import com.rochak.payflow.security.SecurityUtils;
 import com.rochak.payflow.service.WalletService;
@@ -33,5 +34,11 @@ public class WalletController {
     public ResponseEntity<WalletResponseDTO> transferMoney(@RequestBody @Valid TransferRequestDTO requestDTO){
         String email = SecurityUtils.getCurrentUserEmail();
         return new ResponseEntity<>(walletService.transferMoney(email, requestDTO), HttpStatus.OK);
+    }
+
+    @PostMapping("/withdraw")
+    public ResponseEntity<WalletResponseDTO> withdrawMoney(@RequestBody @Valid WithdrawRequestDto request){
+        String email = SecurityUtils.getCurrentUserEmail();
+        return new ResponseEntity<>(walletService.withdrawMoney(email, request), HttpStatus.OK);
     }
 }
