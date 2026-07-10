@@ -1,0 +1,6 @@
+payflow:
+  wallet:
+    limits:
+      max-balance: 100000
+      daily-transfer-limit: 25000
+      daily-withdrawal-limit: 10000

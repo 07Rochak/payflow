@@ -2,6 +2,7 @@ package com.rochak.payflow.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -21,4 +22,7 @@ public class Wallet {
     @OneToOne(fetch=FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
+
+    @Column(nullable = false)
+    private boolean frozen = false;
 }

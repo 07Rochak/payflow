@@ -41,4 +41,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleInsufficientBalanceException(InsufficientBalanceException ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(WalletFrozenException.class)
+    public ResponseEntity<String> handleWalletFrozenException(WalletFrozenException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

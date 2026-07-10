@@ -1,13 +1,18 @@
 package com.rochak.payflow;
 
+import com.rochak.payflow.configs.WalletLimitConfig;
 import com.rochak.payflow.entity.User;
 import com.rochak.payflow.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
+@EnableConfigurationProperties(
+		WalletLimitConfig.class
+)
 public class PayflowApplication {
 
 	public static void main(String[] args) {

@@ -1,5 +1,6 @@
 package com.rochak.payflow.service.impl;
 
+import com.rochak.payflow.configs.WalletLimitConfig;
 import com.rochak.payflow.dto.request.AddMoneyRequestDTO;
 import com.rochak.payflow.dto.request.TransferRequestDTO;
 import com.rochak.payflow.dto.request.WithdrawRequestDto;
@@ -7,6 +8,8 @@ import com.rochak.payflow.dto.response.WalletResponseDTO;
 import com.rochak.payflow.entity.*;
 import com.rochak.payflow.exception.InsufficientBalanceException;
 import com.rochak.payflow.exception.ResourceNotFoundException;
+import com.rochak.payflow.exception.WalletFrozenException;
+import com.rochak.payflow.exception.WalletLimitExceededException;
 import com.rochak.payflow.mapper.WalletMapper;
 import com.rochak.payflow.repository.TransactionRepository;
 import com.rochak.payflow.repository.UserRepository;
@@ -17,6 +20,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -25,6 +29,7 @@ public class WalletServiceImpl implements WalletService {
     private WalletRepository walletRepository;
     private UserRepository userRepository;
     private final TransactionRepository transactionRepository;
+    private final WalletLimitConfig walletLimitConfig;
 
     @Override
     public WalletResponseDTO getWalletByUserId(long userId) {
@@ -57,6 +62,12 @@ public class WalletServiceImpl implements WalletService {
                 .orElseThrow(
                         ()-> new ResourceNotFoundException("Wallet not found")
                 );
+        Double newBalance = wallet.getBalance() + request.getAmount();
+        if(newBalance.compareTo(walletLimitConfig.getMaxBalance())>0){
+            throw new WalletLimitExceededException(
+                    "Maximum wallet balance exceeded. Money addition declined"
+            );
+        }
         wallet.setBalance(wallet.getBalance() + request.getAmount());
         Transaction transaction = Transaction.builder()
                 .receiverWallet(wallet)
@@ -125,6 +136,11 @@ public class WalletServiceImpl implements WalletService {
 //                .orElseThrow(
 //                        ()-> new ResourceNotFoundException("Wallet not found")
 //                );
+        if (sender.isFrozen()) {
+            throw new WalletFrozenException(
+                    "Wallet is frozen. Transfers are not allowed."
+            );
+        }
 
         if(user.getId().equals(transferRequestDTO.getToUserId())){
             throw new RuntimeException("Cannot transfer to same user");
@@ -133,7 +149,12 @@ public class WalletServiceImpl implements WalletService {
         if(sender.getBalance()< transferRequestDTO.getAmount()){
             throw new RuntimeException("Insufficient balance");
         }
-
+        Double receiverNewBalance = receiver.getBalance() + transferRequestDTO.getAmount();
+        if (receiverNewBalance.compareTo(walletLimitConfig.getMaxBalance()) > 0) {
+            throw new WalletLimitExceededException(
+                    "Maximum wallet balance exceeded"
+            );
+        }
         sender.setBalance(sender.getBalance() - transferRequestDTO.getAmount());
         receiver.setBalance(receiver.getBalance()+ transferRequestDTO.getAmount());
         Wallet savedSender = walletRepository.save(sender);
@@ -167,6 +188,12 @@ public class WalletServiceImpl implements WalletService {
                         () -> new ResourceNotFoundException("Wallet not found")
                 );
 
+        if (wallet.isFrozen()) {
+            throw new WalletFrozenException(
+                    "Wallet is frozen. Withdrawals are not allowed."
+            );
+        }
+
         if(wallet.getBalance().compareTo(request.getAmount())<0){
             throw new InsufficientBalanceException("Insufficient wallet balance");
         }
@@ -187,4 +214,39 @@ public class WalletServiceImpl implements WalletService {
         transactionRepository.save(transaction);
         return WalletMapper.mapToResponse(wallet);
     }
+
+    @Override
+    @Transactional
+    public void freezeWallet(long walletId) {
+        Wallet wallet = walletRepository.findById(walletId)
+                .orElseThrow(
+                        ()-> new ResourceNotFoundException("Wallet not found")
+                );
+        if (wallet.isFrozen()) {
+            throw new WalletFrozenException(
+                    "Wallet is already frozen"
+            );
+        }
+        wallet.setFrozen(true);
+        walletRepository.save(wallet);
+    }
+
+    @Override
+    @Transactional
+    public void unFreezeWallet(long walletId) {
+        Wallet wallet = walletRepository.findById(walletId)
+                .orElseThrow(
+                        ()-> new ResourceNotFoundException("Wallet not found")
+                );
+        if (!wallet.isFrozen()) {
+            throw new WalletFrozenException(
+                    "Wallet is already active"
+            );
+        }
+
+        wallet.setFrozen(false);
+        walletRepository.save(wallet);
+    }
+
+
 }

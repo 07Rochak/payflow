@@ -5,10 +5,7 @@ import com.rochak.payflow.service.WalletService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin/wallets")
@@ -20,7 +17,22 @@ public class AdminWalletController {
     @GetMapping("/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<WalletResponseDTO> getWalletByUserId(@PathVariable("userId") Long id){
-        System.out.println("API hit");
         return ResponseEntity.ok(walletService.getWalletByUserId(id));
+    }
+
+    @PostMapping("/{walletId}/freeze")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> freezeWalletByWalletId(@PathVariable("walletId") Long id)
+    {
+        walletService.freezeWallet(id);
+        return ResponseEntity.ok("Wallet frozen successfully.");
+    }
+
+    @PostMapping("/{walletId}/unFreeze")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> unFreezeWalletByWalletId(@PathVariable("walletId") Long id)
+    {
+        walletService.unFreezeWallet(id);
+        return ResponseEntity.ok("Wallet unfrozen successfully");
     }
 }

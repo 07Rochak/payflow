@@ -11,4 +11,6 @@ public interface WalletService {
     WalletResponseDTO addMoney(Long userId, AddMoneyRequestDTO request);
     WalletResponseDTO transferMoney(String email, TransferRequestDTO transferRequestDTO);
     WalletResponseDTO withdrawMoney(String email, WithdrawRequestDto request);
+    void freezeWallet(long walletId);
+    void unFreezeWallet(long walletId);
 }
