@@ -125,6 +125,21 @@ public class WalletServiceImpl implements WalletService {
 
         Wallet sender = first.getUser().getId().equals(senderUserId) ? first : second;
 
+        LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay();
+
+        Double todayTransferAmount = transactionRepository.getTodayTransactionAmount(
+                sender.getUser().getId(),
+                TransactionType.TRANSFER,
+                TransactionStatus.SUCCESS,
+                startOfDay
+        );
+
+        Double projectedAmount = todayTransferAmount + transferRequestDTO.getAmount();
+
+        if(projectedAmount > walletLimitConfig.getDailyTransferLimit()) {
+            throw new WalletLimitExceededException("Daily Transfer limit exceeded");
+        }
+
         Wallet  receiver = second.getUser().getId().equals(receiverUserId) ? second : first;
 
 //        Wallet sender = walletRepository.findByUser_Id(user.getId())
@@ -197,7 +212,16 @@ public class WalletServiceImpl implements WalletService {
         if(wallet.getBalance().compareTo(request.getAmount())<0){
             throw new InsufficientBalanceException("Insufficient wallet balance");
         }
+        LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay();
 
+        Double todayWithdrawalAmount = transactionRepository.getTodayTransactionAmount(id, TransactionType.WITHDRAWAL, TransactionStatus.SUCCESS, startOfDay);
+
+        double projectedWithdrawAmount = todayWithdrawalAmount + request.getAmount();
+
+        if(projectedWithdrawAmount > walletLimitConfig.getDailyWithdrawalLimit()) {
+            throw new WalletLimitExceededException("Daily withdrawal limit exceeded");
+        }
+        
         wallet.setBalance(wallet.getBalance() - request.getAmount());
 
         Transaction transaction = Transaction.builder()
