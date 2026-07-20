@@ -221,7 +221,7 @@ public class WalletServiceImpl implements WalletService {
         if(projectedWithdrawAmount > walletLimitConfig.getDailyWithdrawalLimit()) {
             throw new WalletLimitExceededException("Daily withdrawal limit exceeded");
         }
-        
+
         wallet.setBalance(wallet.getBalance() - request.getAmount());
 
         Transaction transaction = Transaction.builder()
