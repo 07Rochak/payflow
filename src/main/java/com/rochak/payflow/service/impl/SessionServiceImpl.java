@@ -25,8 +25,11 @@ public class SessionServiceImpl implements SessionService {
                 .sessionId(UUID.randomUUID().toString())
                 .userId(user.getId())
                 .email(user.getEmail())
+                .currentTokenId(UUID.randomUUID().toString())
                 .loginTime(Instant.now())
                 .lastUsed(Instant.now())
+                .device(device)
+                .ip(ip)
                 .sessionVersion(1)
                 .ttl(sessionProperties.getRefreshTokenTtl())
                 .build();

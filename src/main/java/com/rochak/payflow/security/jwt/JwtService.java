@@ -45,13 +45,15 @@ public class JwtService {
     }
 
     public String extractEmail(String token){
-        Claims claims = Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token)
-                .getPayload();
+        return extractClaims(token).getSubject();
+    }
 
-        return claims.getSubject();
+    public String extractSessionId(String token){
+        return extractClaims(token).get("sid", String.class);
+    }
+
+    public String extractToken(String token){
+        return extractClaims(token).getId();
     }
 
     public boolean isTokenValid(String token){
@@ -67,14 +69,24 @@ public class JwtService {
         }
     }
 
-    public String generateRefreshToken(String email) {
+    public String generateRefreshToken(String email, String sessionId, String tokenId) {
         return Jwts.builder()
                 .subject(email)
+                .id(tokenId)
+                .claim("sid", sessionId)
                 .issuedAt(new Date())
                 .expiration(
                         new Date(System.currentTimeMillis() + refreshExpiration)
                 )
                 .signWith(key)
                 .compact();
+    }
+
+    public Claims extractClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
 }

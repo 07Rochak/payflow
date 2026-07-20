@@ -11,6 +11,8 @@ import com.rochak.payflow.repository.RefreshTokenRepository;
 import com.rochak.payflow.repository.UserRepository;
 import com.rochak.payflow.security.jwt.JwtService;
 import com.rochak.payflow.service.AuthService;
+import com.rochak.payflow.service.SessionService;
+import com.rochak.payflow.session.UserSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,7 @@ public class AuthServiceImpl implements AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final SessionService sessionService;
 
     @Override
     public AuthResponseDTO login(LoginRequestDTO request) {
@@ -45,9 +48,11 @@ public class AuthServiceImpl implements AuthService {
             throw new RuntimeException("Invalid email or password");
         }
 
+        UserSession session = sessionService.createSession(user, "unknown", "127.0.0.1");
+
         String token = jwtService.generateToken(user.getEmail(), user.getRole().name());
 
-        String refreshToken = jwtService.generateRefreshToken(user.getEmail());
+        String refreshToken = jwtService.generateRefreshToken(user.getEmail(), session.getSessionId(), session.getCurrentTokenId());
 
         RefreshToken refreshTokenEntity = RefreshToken.builder()
                 .token(refreshToken)
