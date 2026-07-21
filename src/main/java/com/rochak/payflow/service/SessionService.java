@@ -4,16 +4,21 @@ import com.rochak.payflow.entity.User;
 import com.rochak.payflow.session.UserSession;
 
 import java.util.Optional;
+import java.util.Set;
 
 public interface SessionService {
 
     UserSession createSession(User user, String device, String ip);
 
-    Optional<UserSession> findBySessionId(String sessionId);
+    Optional<UserSession> getRequiredSession(String sessionId);
 
     void deleteSession(String sessionId);
 
-    void updateSession(String sessionId);
-
     void rotateToken(String sessionId, String newTokenId);
+
+    Set<String> getUserSessions(Long userId);
+
+    void deleteAllSessions(Long userId);
+
+    UserSession validateAndRotate(String sessionId, String presentedTokenId);
 }
