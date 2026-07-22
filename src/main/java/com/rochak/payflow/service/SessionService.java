@@ -14,8 +14,6 @@ public interface SessionService {
 
     void deleteSession(String sessionId);
 
-    void rotateToken(String sessionId, String newTokenId);
-
     Set<String> getUserSessions(Long userId);
 
     void deleteAllSessions(Long userId);

@@ -4,10 +4,10 @@ import com.rochak.payflow.dto.auth.AuthResponseDTO;
 import com.rochak.payflow.dto.auth.LoginRequestDTO;
 import com.rochak.payflow.dto.request.LogoutRequestDto;
 import com.rochak.payflow.dto.request.RefreshTokenRequestDto;
-import com.rochak.payflow.entity.RefreshToken;
+//import com.rochak.payflow.entity.RefreshToken;
 import com.rochak.payflow.entity.User;
 import com.rochak.payflow.exception.ResourceNotFoundException;
-import com.rochak.payflow.repository.RefreshTokenRepository;
+//import com.rochak.payflow.repository.RefreshTokenRepository;
 import com.rochak.payflow.repository.UserRepository;
 import com.rochak.payflow.security.jwt.JwtService;
 import com.rochak.payflow.service.AuthService;
@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
+//    private final RefreshTokenRepository refreshTokenRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final SessionService sessionService;
@@ -54,18 +54,18 @@ public class AuthServiceImpl implements AuthService {
 
         String refreshToken = jwtService.generateRefreshToken(user.getEmail(), session.getSessionId(), session.getCurrentTokenId());
 
-        RefreshToken refreshTokenEntity = RefreshToken.builder()
-                .token(refreshToken)
-                .user(user)
-                .expiryDate(LocalDateTime.now().plusDays(7))
-                .revoked(false)
-                .build();
-
-        refreshTokenRepository
-                .findByUser(user)
-                .ifPresent(refreshTokenRepository::delete);
-
-        refreshTokenRepository.save(refreshTokenEntity);
+//        RefreshToken refreshTokenEntity = RefreshToken.builder()
+//                .token(refreshToken)
+//                .user(user)
+//                .expiryDate(LocalDateTime.now().plusDays(7))
+//                .revoked(false)
+//                .build();
+//
+//        refreshTokenRepository
+//                .findByUser(user)
+//                .ifPresent(refreshTokenRepository::delete);
+//
+//        refreshTokenRepository.save(refreshTokenEntity);
 
         return AuthResponseDTO.builder()
                 .accessToken(token)
@@ -75,39 +75,76 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponseDTO refreshToken(RefreshTokenRequestDto request) {
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(request.getRefreshToken())
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("Refresh token not found")
-                );
 
-        if(refreshToken.isRevoked()){
-            throw new RuntimeException("Refresh token revoked");
-        }
-        if(refreshToken.getExpiryDate().isBefore(LocalDateTime.now())){
-            throw new RuntimeException("Refresh token expired");
+        String refreshToken = request.getRefreshToken();
+
+        // validate signature and expiry
+        if(!jwtService.isTokenValid(refreshToken)){
+            throw new RuntimeException("Invalid refresh token");
         }
 
-        User user = refreshToken.getUser();
+        // extract values from jwt
+        String email = jwtService.extractEmail(refreshToken);
+        String sessionId = jwtService.extractSessionId(refreshToken);
+        String tokenId = jwtService.extractToken(refreshToken);
 
+        // validate session and rotate refresh token
+        UserSession session = sessionService.validateAndRotate(sessionId, tokenId);
+
+        // Load user
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(()-> new ResourceNotFoundException("User not found"));
+
+        // Generate new tokens
         String accessToken = jwtService.generateToken(user.getEmail(), user.getRole().name());
+
+        String newRefreshToken = jwtService.generateRefreshToken(user.getEmail(), session.getSessionId(), session.getCurrentTokenId());
 
         return AuthResponseDTO.builder()
                 .accessToken(accessToken)
-                .refreshToken(
-                        refreshToken.getToken()
-                )
+                .refreshToken(newRefreshToken)
                 .build();
+//        RefreshToken refreshToken = refreshTokenRepository.findByToken(request.getRefreshToken())
+//                .orElseThrow(
+//                        () -> new ResourceNotFoundException("Refresh token not found")
+//                );
+//
+//        if(refreshToken.isRevoked()){
+//            throw new RuntimeException("Refresh token revoked");
+//        }
+//        if(refreshToken.getExpiryDate().isBefore(LocalDateTime.now())){
+//            throw new RuntimeException("Refresh token expired");
+//        }
+//
+//        User user = refreshToken.getUser();
+//
+//        String accessToken = jwtService.generateToken(user.getEmail(), user.getRole().name());
+//
+//        return AuthResponseDTO.builder()
+//                .accessToken(accessToken)
+//                .refreshToken(
+//                        refreshToken.getToken()
+//                )
+//                .build();
     }
 
     @Override
     public void logout(LogoutRequestDto request) {
-        RefreshToken refreshToken = refreshTokenRepository.findByToken(request.getRefreshToken())
-                .orElseThrow(
-                        () -> new ResourceNotFoundException("Refresh token not found")
-                );
+//        RefreshToken refreshToken = refreshTokenRepository.findByToken(request.getRefreshToken())
+//                .orElseThrow(
+//                        () -> new ResourceNotFoundException("Refresh token not found")
+//                );
+//
+//        refreshToken.setRevoked(true);
+//        refreshTokenRepository.save(refreshToken);
+        String refreshToken = request.getRefreshToken();
 
-        refreshToken.setRevoked(true);
-        refreshTokenRepository.save(refreshToken);
+        if(!jwtService.isTokenValid(refreshToken)){
+            return;
+        }
+
+        String sessionId = jwtService.extractSessionId(refreshToken);
+        sessionService.deleteSession(sessionId);
     }
 
 }

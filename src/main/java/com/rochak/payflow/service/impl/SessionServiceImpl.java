@@ -60,10 +60,6 @@ public class SessionServiceImpl implements SessionService {
         redisTemplate.opsForSet().remove(RedisKeys.userSessions(session.getUserId()), sessionId);
     }
 
-    @Override
-    public void rotateToken(String sessionId, String newTokenId) {
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
 
     @Override
     public Set<String> getUserSessions(Long userId) {
