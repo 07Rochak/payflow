@@ -33,12 +33,10 @@ public class WalletServiceImpl implements WalletService {
 
     @Override
     public WalletResponseDTO getWalletByUserId(long userId) {
-        System.out.println("process reached");
         Wallet wallet = walletRepository.findByUser_Id(userId)
                 .orElseThrow(
                         ()-> new ResourceNotFoundException("Wallet not found")
                 );
-        System.out.println("wallet extracted");
         return WalletMapper.mapToResponse(wallet);
     }
 

@@ -1,6 +1,7 @@
 package com.rochak.payflow.service.impl;
 
 import com.rochak.payflow.entity.User;
+import com.rochak.payflow.exception.RefreshTokenReuseException;
 import com.rochak.payflow.exception.ResourceNotFoundException;
 import com.rochak.payflow.repository.UserSessionRepository;
 import com.rochak.payflow.service.SessionService;
@@ -89,7 +90,7 @@ public class SessionServiceImpl implements SessionService {
 
         if(!Objects.equals(session.getCurrentTokenId(), presentedTokenId)) {
             deleteSession(sessionId);
-            throw new IllegalStateException("Refresh token reuse detected");
+            throw new RefreshTokenReuseException("Refresh token reuse detected");
         }
         return rotateToken(session);
     }

@@ -27,10 +27,8 @@ public class PaymentController {
 
     @PostMapping("/verify")
     public ResponseEntity<String> verifyPayment(@RequestBody @Valid PaymentVerificationRequestDTO request){
-        System.out.println("Request received");
         String email = SecurityUtils.getCurrentUserEmail();
 
-        System.out.println("Entering verification function");
         paymentService.verifyPayment(email, request);
 
         return ResponseEntity.ok("Payment Verified Successfully!");

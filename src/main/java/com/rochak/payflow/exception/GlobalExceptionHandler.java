@@ -46,4 +46,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleWalletFrozenException(WalletFrozenException ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(RefreshTokenReuseException.class)
+    public ResponseEntity<String> handleRefreshTokenReuseException(RefreshTokenReuseException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }
