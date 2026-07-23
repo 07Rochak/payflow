@@ -60,7 +60,7 @@ public class SessionServiceImpl implements SessionService {
     @Override
     public void deleteSession(String sessionId) {
         UserSession session = userSessionRepository.findById(sessionId)
-                        .orElseThrow(() -> new ResourceNotFoundException("Session not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Session not found"));
         userSessionRepository.deleteById(sessionId);
         redisTemplate.opsForSet().remove(RedisKeys.userSessions(session.getUserId()), sessionId);
     }
@@ -75,12 +75,11 @@ public class SessionServiceImpl implements SessionService {
     public void deleteAllSessions(Long userId) {
         Set<String> sessions = getUserSessions(userId);
 
-        if(sessions == null || sessions.isEmpty())
-        {
+        if (sessions == null || sessions.isEmpty()) {
             return;
         }
 
-        for(String sessionId : sessions){
+        for (String sessionId : sessions) {
             userSessionRepository.deleteById(sessionId);
         }
 
@@ -92,17 +91,17 @@ public class SessionServiceImpl implements SessionService {
         UserSession session = userSessionRepository.findById(sessionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Session not found"));
 
-        if(Instant.now().isAfter(session.getExpiresAt())){
+        if (Instant.now().isAfter(session.getExpiresAt())) {
             deleteSession(sessionId);
             throw new SessionExpiredException("Maximum session lifetime exceeded. Please log in again.");
         }
 
-        if(!Objects.equals(session.getCurrentTokenId(), presentedTokenId)) {
+        if (!Objects.equals(session.getCurrentTokenId(), presentedTokenId)) {
             deleteSession(sessionId);
             throw new RefreshTokenReuseException("Refresh token reuse detected");
         }
 
-        if(!session.getCurrentTokenId().equals(presentedTokenId)){
+        if (!session.getCurrentTokenId().equals(presentedTokenId)) {
             deleteSession(sessionId);
             throw new RefreshTokenReuseException("Refresh Token reuse detected");
         }
@@ -119,27 +118,27 @@ public class SessionServiceImpl implements SessionService {
 
         Set<String> userSessionKeys = redisTemplate.keys("user:*:sessions");
 
-        if(userSessionKeys == null || userSessionKeys.isEmpty()){
+        if (userSessionKeys == null || userSessionKeys.isEmpty()) {
             log.info("No user session sets found.");
             return;
         }
 
-        for(String userKey: userSessionKeys) {
+        for (String userKey : userSessionKeys) {
             usersScanned++;
 
-            try{
+            try {
                 Set<String> sessionIds = redisTemplate.opsForSet().members(userKey);
-                if(sessionIds == null || sessionIds.isEmpty()){
+                if (sessionIds == null || sessionIds.isEmpty()) {
                     continue;
                 }
 
-                for(String sessionIdObj: sessionIds){
+                for (String sessionIdObj : sessionIds) {
                     sessionsChecked++;
                     String sessionId = sessionIdObj.toString();
                     boolean exists = userSessionRepository.existsById(sessionId);
 
-                    if(!exists){
-                        redisTemplate.opsForSet().remove(userKey,sessionId);
+                    if (!exists) {
+                        redisTemplate.opsForSet().remove(userKey, sessionId);
                         orphanSessionsRemoved++;
                         log.info("Removed orphan session {} from User {}", sessionId, userKey);
                     }
@@ -147,7 +146,7 @@ public class SessionServiceImpl implements SessionService {
 
                 Long remaining = redisTemplate.opsForSet().size(userKey);
 
-                if(remaining !=null && remaining == 0){
+                if (remaining != null && remaining == 0) {
                     redisTemplate.delete(userKey);
                 }
             } catch (Exception e) {
@@ -166,8 +165,7 @@ public class SessionServiceImpl implements SessionService {
         }
     }
 
-    private UserSession rotateToken(UserSession session)
-    {
+    private UserSession rotateToken(UserSession session) {
         session.setCurrentTokenId(UUID.randomUUID().toString());
 
         session.setLastUsed(Instant.now());

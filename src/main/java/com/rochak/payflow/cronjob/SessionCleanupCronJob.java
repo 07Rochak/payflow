@@ -14,8 +14,8 @@ import java.util.Set;
 public class SessionCleanupCronJob {
     private final SessionService sessionService;
 
-    @Scheduled(cron = "0 * * * * *")
-//    @Scheduled(cron = "0 0 * * * *") // run every hour
+//    @Scheduled(cron = "0 * * * * *") // for testing
+    @Scheduled(cron = "0 0 * * * *") // run every hour
     public void cleanupOrphanSessions() {
         log.info("Starting orphan session cleanup");
         sessionService.cleanupOrphanSessions();
