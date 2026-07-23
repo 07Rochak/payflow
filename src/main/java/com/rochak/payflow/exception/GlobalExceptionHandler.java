@@ -51,4 +51,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleRefreshTokenReuseException(RefreshTokenReuseException ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(SessionExpiredException.class)
+    public ResponseEntity<String> handleSessionExpiredException(SessionExpiredException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

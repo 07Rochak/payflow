@@ -11,4 +11,5 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 public class SessionProperties {
     private Long refreshTokenTtl;
+    private Long maxSessionLifetime;
 }

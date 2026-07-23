@@ -5,4 +5,5 @@ payflow:
       daily-transfer-limit: 25000
       daily-withdrawal-limit: 10000
   session:
-    refresh-token-ttl: 604800
+    refresh-token-ttl: 604800 #7 days
+    max-session-lifetime: 2592000 #30 days

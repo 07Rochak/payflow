@@ -28,6 +28,8 @@ public class UserSession {
 
     private Instant lastUsed;
 
+    private Instant expiresAt;
+
     private String device;
 
     private String ip;

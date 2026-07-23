@@ -19,4 +19,6 @@ public interface SessionService {
     void deleteAllSessions(Long userId);
 
     UserSession validateAndRotate(String sessionId, String presentedTokenId);
+
+    void cleanupOrphanSessions();
 }
