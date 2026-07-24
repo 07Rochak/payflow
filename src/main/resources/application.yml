@@ -7,3 +7,7 @@ payflow:
   session:
     refresh-token-ttl: 604800 #7 days
     max-session-lifetime: 2592000 #30 days
+  security:
+    session:
+      max-active-sessions: 5;
+      clock-drift-tolerance-seconds: 60
