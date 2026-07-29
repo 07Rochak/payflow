@@ -56,4 +56,19 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleSessionExpiredException(SessionExpiredException ex){
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(DeviceMismatchException.class)
+    public ResponseEntity<String> handleDeviceMismatchException(DeviceMismatchException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(IpAddressMismatchException.class)
+    public ResponseEntity<String> handleIpAddressMismatchException(IpAddressMismatchException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SessionValidationException.class)
+    public ResponseEntity<String> handleSessionValidationException(SessionValidationException ex){
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

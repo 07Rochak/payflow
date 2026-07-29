@@ -12,4 +12,6 @@ import org.springframework.stereotype.Component;
 public class SecurityProperties {
     private int maxActiveSessions;
     private long clockDriftToleranceSeconds;
+    private boolean validateDevice;
+    private boolean validateIp;
 }

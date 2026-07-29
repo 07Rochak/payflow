@@ -6,9 +6,9 @@ import com.rochak.payflow.exception.ResourceNotFoundException;
 import com.rochak.payflow.exception.SessionExpiredException;
 import com.rochak.payflow.repository.UserSessionRepository;
 import com.rochak.payflow.service.SessionService;
-import com.rochak.payflow.session.RedisKeys;
-import com.rochak.payflow.session.SessionProperties;
-import com.rochak.payflow.session.UserSession;
+import com.rochak.payflow.service.SessionValidationService;
+import com.rochak.payflow.session.*;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,6 +27,9 @@ public class SessionServiceImpl implements SessionService {
     private final UserSessionRepository userSessionRepository;
     private final SessionProperties sessionProperties;
     private final RedisTemplate<String, String> redisTemplate;
+    private final SessionValidationService sessionValidationService;
+    private final DeviceExtractor deviceExtractor;
+    private final IpExtractor ipExtractor;
 
 
     @Override
@@ -87,7 +90,7 @@ public class SessionServiceImpl implements SessionService {
     }
 
     @Override
-    public UserSession validateAndRotate(String sessionId, String presentedTokenId) {
+    public UserSession validateAndRotate(String sessionId, String presentedTokenId, HttpServletRequest request) {
         UserSession session = userSessionRepository.findById(sessionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Session not found"));
 
@@ -105,6 +108,13 @@ public class SessionServiceImpl implements SessionService {
             deleteSession(sessionId);
             throw new RefreshTokenReuseException("Refresh Token reuse detected");
         }
+
+        String device = deviceExtractor.extract(request);
+        String ip = ipExtractor.extract(request);
+        log.info("Session before validation: {}", session);
+        log.info("Session Version = {}", session.getSessionVersion());
+        sessionValidationService.validate(session, device, ip);
+
         return rotateToken(session);
     }
 

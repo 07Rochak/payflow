@@ -5,6 +5,7 @@ import com.rochak.payflow.dto.auth.LoginRequestDTO;
 import com.rochak.payflow.dto.request.LogoutRequestDto;
 import com.rochak.payflow.dto.request.RefreshTokenRequestDto;
 import com.rochak.payflow.service.AuthService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +21,14 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid LoginRequestDTO request)
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid LoginRequestDTO request, HttpServletRequest httpServletRequest)
     {
-        return ResponseEntity.ok(authService.login(request));
+        return ResponseEntity.ok(authService.login(request, httpServletRequest));
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid RefreshTokenRequestDto token){
-        return ResponseEntity.ok(authService.refreshToken(token));
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid RefreshTokenRequestDto token, HttpServletRequest request){
+        return ResponseEntity.ok(authService.refreshToken(token, request));
     }
 
     @PostMapping("/logout")
