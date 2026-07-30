@@ -9,7 +9,7 @@ payflow:
     max-session-lifetime: 2592000 #30 days
   security:
     session:
-      max-active-sessions: 5;
+      max-active-sessions: 5
       clock-drift-tolerance-seconds: 60
       validate-device: true
       validate-ip: true

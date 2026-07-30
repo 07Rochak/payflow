@@ -12,17 +12,16 @@ import com.rochak.payflow.repository.UserRepository;
 import com.rochak.payflow.security.jwt.JwtService;
 import com.rochak.payflow.service.AuthService;
 import com.rochak.payflow.service.SessionService;
-import com.rochak.payflow.service.SessionValidationService;
 import com.rochak.payflow.session.DeviceExtractor;
 import com.rochak.payflow.session.IpExtractor;
 import com.rochak.payflow.session.UserSession;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -37,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponseDTO login(LoginRequestDTO request, HttpServletRequest httpServletRequest) {
+        log.info("Login request recieved for email: {}", request.getEmail());
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(
                         () -> new RuntimeException("Invalid email or password")
@@ -60,10 +60,15 @@ public class AuthServiceImpl implements AuthService {
 
         UserSession session = sessionService.createSession(user, device, ip);
 
+        log.info("Session created for user. UserId = {}, TokenId={}", user.getId(), session);
+
         String token = jwtService.generateToken(user.getEmail(), user.getRole().name());
+
+        log.info("Token generated successfully. UserId = {}, TokenId = {}", user.getId(), token);
 
         String refreshToken = jwtService.generateRefreshToken(user.getEmail(), session.getSessionId(), session.getCurrentTokenId());
 
+        log.info("Refresh Token generated successfully. UserId = {}, TokenId = {}", user.getId(), refreshToken);
 //        RefreshToken refreshTokenEntity = RefreshToken.builder()
 //                .token(refreshToken)
 //                .user(user)
@@ -98,6 +103,8 @@ public class AuthServiceImpl implements AuthService {
         String sessionId = jwtService.extractSessionId(refreshToken);
         String tokenId = jwtService.extractToken(refreshToken);
 
+        log.info("Extracted values before Refresh: Email: {}, Session ID: {}, Token ID: {}", email, sessionId, tokenId);
+
         // validate session and rotate refresh token
         UserSession session = sessionService.validateAndRotate(sessionId, tokenId, httpRequest);
 
@@ -110,6 +117,7 @@ public class AuthServiceImpl implements AuthService {
 
         String newRefreshToken = jwtService.generateRefreshToken(user.getEmail(), session.getSessionId(), session.getCurrentTokenId());
 
+        log.info("New Access Tokens for UserId: {}, Access Token: {}, Refresh Token: {}", user.getId(), accessToken, newRefreshToken);
         return AuthResponseDTO.builder()
                 .accessToken(accessToken)
                 .refreshToken(newRefreshToken)
@@ -148,12 +156,12 @@ public class AuthServiceImpl implements AuthService {
 //        refreshToken.setRevoked(true);
 //        refreshTokenRepository.save(refreshToken);
         String refreshToken = request.getRefreshToken();
-
         if(!jwtService.isTokenValid(refreshToken)){
             return;
         }
 
         String sessionId = jwtService.extractSessionId(refreshToken);
+        log.info("Logging out user. Email: {}, Session ID: {}, Refresh Token: {}", jwtService.extractEmail(refreshToken), sessionId, refreshToken);
         sessionService.deleteSession(sessionId);
     }
 

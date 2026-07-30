@@ -17,6 +17,7 @@ import com.rochak.payflow.repository.WalletRepository;
 import com.rochak.payflow.service.WalletService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ import java.time.LocalDateTime;
 
 @AllArgsConstructor
 @Service
+@Slf4j
 public class WalletServiceImpl implements WalletService {
     private WalletRepository walletRepository;
     private UserRepository userRepository;
@@ -56,6 +58,7 @@ public class WalletServiceImpl implements WalletService {
     @Override
     @Transactional
     public WalletResponseDTO addMoney(Long userId, AddMoneyRequestDTO request) {
+        log.info("Add Money request Received. User: {}, amount: {}", userId, request.getAmount());
         Wallet wallet = walletRepository.findByUser_Id(userId)
                 .orElseThrow(
                         ()-> new ResourceNotFoundException("Wallet not found")
@@ -67,6 +70,7 @@ public class WalletServiceImpl implements WalletService {
             );
         }
         wallet.setBalance(wallet.getBalance() + request.getAmount());
+        log.info("Validation Successful. Creating Transaction");
         Transaction transaction = Transaction.builder()
                 .receiverWallet(wallet)
                 .amount(request.getAmount())
@@ -78,12 +82,14 @@ public class WalletServiceImpl implements WalletService {
                 .build();
         transactionRepository.save(transaction);
         walletRepository.save(wallet);
+        log.info("Wallet Updated. Walled ID: {}, Balance: {}", wallet.getId(), wallet.getBalance());
         return WalletMapper.mapToResponse(wallet);
     }
 
     @Override
     @Transactional
     public WalletResponseDTO transferMoney(String email, TransferRequestDTO transferRequestDTO) {
+        log.info("Transfer money request received");
         User user = userRepository.findByEmail(email)
                 .orElseThrow(
                         () -> new UsernameNotFoundException("User not found")
@@ -121,6 +127,7 @@ public class WalletServiceImpl implements WalletService {
                     );
         }
 
+        log.info("Wallet locking done");
         Wallet sender = first.getUser().getId().equals(senderUserId) ? first : second;
 
         LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay();
@@ -168,6 +175,7 @@ public class WalletServiceImpl implements WalletService {
                     "Maximum wallet balance exceeded"
             );
         }
+        log.info("Validations complete, transaction is valid.");
         sender.setBalance(sender.getBalance() - transferRequestDTO.getAmount());
         receiver.setBalance(receiver.getBalance()+ transferRequestDTO.getAmount());
         Wallet savedSender = walletRepository.save(sender);
@@ -183,12 +191,14 @@ public class WalletServiceImpl implements WalletService {
                 .createdAt(LocalDateTime.now())
                 .build();
         transactionRepository.save(transaction);
+        log.info("Transaction Completed. Sender: {}, Reciever: {}, amount: {}", sender.getId(), receiver.getId(), transferRequestDTO.getAmount());
         return WalletMapper.mapToResponse(savedSender);
     }
 
     @Override
     @Transactional
     public WalletResponseDTO withdrawMoney(String email, WithdrawRequestDto request) {
+        log.info("Withdraw money request recived");
         User user = userRepository.findByEmail(email)
                 .orElseThrow(
                         ()-> new ResourceNotFoundException("User not found")
@@ -219,6 +229,7 @@ public class WalletServiceImpl implements WalletService {
         if(projectedWithdrawAmount > walletLimitConfig.getDailyWithdrawalLimit()) {
             throw new WalletLimitExceededException("Daily withdrawal limit exceeded");
         }
+        log.info("Validations successful, transaction is valid");
 
         wallet.setBalance(wallet.getBalance() - request.getAmount());
 
@@ -234,6 +245,7 @@ public class WalletServiceImpl implements WalletService {
 
         walletRepository.save(wallet);
         transactionRepository.save(transaction);
+        log.info("Withdrawal completed. Wallet Id: {}, amount: {}", wallet.getId(), request.getAmount());
         return WalletMapper.mapToResponse(wallet);
     }
 
@@ -251,6 +263,7 @@ public class WalletServiceImpl implements WalletService {
         }
         wallet.setFrozen(true);
         walletRepository.save(wallet);
+        log.info("Wallet ID: {} Frozen", walletId);
     }
 
     @Override
@@ -268,6 +281,7 @@ public class WalletServiceImpl implements WalletService {
 
         wallet.setFrozen(false);
         walletRepository.save(wallet);
+        log.info("Wallet ID: {} unfrozen", walletId);
     }
 
 

@@ -18,6 +18,7 @@ import com.rochak.payflow.security.SecurityUtils;
 import com.rochak.payflow.service.PaymentService;
 import com.rochak.payflow.service.WalletService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
 
@@ -47,6 +49,10 @@ public class PaymentServiceImpl implements PaymentService {
             options.put("currency", "INR");
             options.put("receipt", "receipt_"+System.currentTimeMillis());
 
+            log.info("Creating order with values: Amount: {}, Currency: {}, Receipt: receipt_{}", (int)(request.getAmount()*100),
+                    "INR",
+                    System.currentTimeMillis());
+
             Order order = razorpayClient.orders.create(options);
 
             User user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail())
@@ -63,6 +69,7 @@ public class PaymentServiceImpl implements PaymentService {
                     .build();
 
             paymentRepository.save(payment);
+            log.info("Created payment for User: {} Order ID: {}", user.getId(), order.get("id"));
 
             return CreateOrderResponseDTO
                     .builder()
@@ -84,6 +91,7 @@ public class PaymentServiceImpl implements PaymentService {
             options.put("razorpay_payment_id", request.getRazorpayPaymentId());
             options.put("razorpay_signature", request.getRazorpaySignature());
 
+            log.info("Verifying Payment. Order ID: {}, Payment ID: {}. Signature: {}", request.getRazorpayOrderId(), request.getRazorpayPaymentId(), request.getRazorpaySignature());
             boolean isValid = Utils.verifyPaymentSignature(options, keySecret);
 
             if(!isValid){
@@ -107,11 +115,13 @@ public class PaymentServiceImpl implements PaymentService {
 
             payment.setRazorpayPaymentId(request.getRazorpayPaymentId());
             payment.setStatus(PaymentStatus.SUCCESS);
+            log.info("Payment verified. Order ID: {}, Payment ID: {}", request.getRazorpayOrderId(), request.getRazorpayPaymentId());
             paymentRepository.save(payment);
 
             AddMoneyRequestDTO dto = new AddMoneyRequestDTO();
             dto.setAmount(payment.getAmount());
 
+            log.info("Adding money to wallet. UserId: {}, amount: {}", payment.getUser().getId(), payment.getAmount());
             walletService.addMoney(payment.getUser().getId(), dto);
         } catch (RazorpayException e){
             e.printStackTrace();

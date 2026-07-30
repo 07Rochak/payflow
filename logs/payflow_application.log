@@ -1,0 +1,351 @@
+2026-07-30 20:19:09.932 [background-preinit] INFO  [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-07-30 20:19:09.998 [main] INFO  [] c.rochak.payflow.PayflowApplication - Starting PayflowApplication using Java 21.0.10 with PID 26416 (C:\spring-projects\payflow\target\classes started by rocha in C:\spring-projects\payflow)
+2026-07-30 20:19:10.008 [main] INFO  [] c.rochak.payflow.PayflowApplication - No active profile set, falling back to 1 default profile: "default"
+2026-07-30 20:19:11.040 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-30 20:19:11.042 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-30 20:19:11.264 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JPA - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.UserSessionRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2026-07-30 20:19:11.292 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 237 ms. Found 5 JPA repository interfaces.
+2026-07-30 20:19:11.334 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-30 20:19:11.334 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-30 20:19:11.360 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.PaymentRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:19:11.360 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.RefreshTokenRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:19:11.360 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.TransactionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:19:11.365 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:19:11.365 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.WalletRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:19:11.371 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 17 ms. Found 1 Redis repository interface.
+2026-07-30 20:19:12.202 [main] INFO  [] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-30 20:19:12.219 [main] INFO  [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-30 20:19:12.219 [main] INFO  [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-30 20:19:12.219 [main] INFO  [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-07-30 20:19:12.325 [main] INFO  [] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 2248 ms
+2026-07-30 20:19:12.532 [main] INFO  [] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-07-30 20:19:12.611 [main] INFO  [] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-07-30 20:19:13.323 [main] INFO  [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-30 20:19:13.371 [main] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-30 20:19:13.603 [main] INFO  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@7dc92a06
+2026-07-30 20:19:13.604 [main] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-30 20:19:13.650 [main] WARN  [] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-30 20:19:13.687 [main] INFO  [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/mydb]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 15.17
+	Default catalog/schema: mydb/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-07-30 20:19:15.323 [main] INFO  [] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-07-30 20:19:15.436 [main] INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-30 20:19:15.516 [main] INFO  [] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-30 20:19:17.967 [main] WARN  [] o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-30 20:19:18.112 [main] INFO  [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserServiceImpl
+2026-07-30 20:19:18.827 [main] INFO  [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-30 20:19:18.850 [main] INFO  [] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-07-30 20:19:18.862 [main] INFO  [] c.rochak.payflow.PayflowApplication - Started PayflowApplication in 9.742 seconds (process running for 10.394)
+2026-07-30 20:19:29.709 [http-nio-8080-exec-2] INFO  [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-30 20:19:29.709 [http-nio-8080-exec-2] INFO  [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-30 20:19:29.712 [http-nio-8080-exec-2] INFO  [] o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-07-30 20:19:29.975 [http-nio-8080-exec-2] INFO  [] c.r.p.service.impl.AuthServiceImpl - Login request recieved for email: elliewillams@gmail.com
+2026-07-30 20:19:30.969 [http-nio-8080-exec-2] INFO  [] c.r.p.service.impl.AuthServiceImpl - Session created for user. UserId = 2, TokenId=com.rochak.payflow.session.UserSession@5eac5838
+2026-07-30 20:19:31.122 [http-nio-8080-exec-2] INFO  [] c.r.p.service.impl.AuthServiceImpl - Token generated successfully. UserId = 2, TokenId = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzg1NDQyNzcxLCJleHAiOjE3ODU1MjkxNzF9.hA-wJVtarzHTxz_jivdfdf45GFJQi-sVYeCrMVdQ3AzzTCmQLDHALmTtKlA_h8QAEoaCMTJKJzEfB5PaT7hjbg
+2026-07-30 20:19:31.123 [http-nio-8080-exec-2] INFO  [] c.r.p.service.impl.AuthServiceImpl - Refresh Token generated successfully. UserId = 2, TokenId = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwianRpIjoiYTNhOTk1M2MtZDE1OS00ZDI1LWJhNGItNDhhOGJkZTRiNDI3Iiwic2lkIjoiZWI4NWFjZDAtNWFhNS00NzA1LTk5ZTctM2Q3OGJmOWU4YjU1IiwiaWF0IjoxNzg1NDQyNzcxLCJleHAiOjE3ODYwNDc1NzF9.sOTxJYSyKCG_pdU2oip8DZPm5Bz5dGAT3mlMzY0ODL0rU3d-eVuB2Kdu1OjI7iEIaLtmTZlIH2S2PiGvU-NFOQ
+2026-07-30 20:21:14.699 [SpringApplicationShutdownHook] INFO  [] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-07-30 20:21:14.705 [tomcat-shutdown] INFO  [] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-07-30 20:21:14.735 [SpringApplicationShutdownHook] INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-07-30 20:21:14.738 [SpringApplicationShutdownHook] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-07-30 20:21:14.740 [SpringApplicationShutdownHook] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-07-30 20:23:46.875 [background-preinit] INFO  [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-07-30 20:23:46.957 [main] INFO  [] c.rochak.payflow.PayflowApplication - Starting PayflowApplication using Java 21.0.10 with PID 14100 (C:\spring-projects\payflow\target\classes started by rocha in C:\spring-projects\payflow)
+2026-07-30 20:23:46.957 [main] INFO  [] c.rochak.payflow.PayflowApplication - No active profile set, falling back to 1 default profile: "default"
+2026-07-30 20:23:47.999 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-30 20:23:48.001 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-30 20:23:48.205 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JPA - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.UserSessionRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2026-07-30 20:23:48.238 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 223 ms. Found 5 JPA repository interfaces.
+2026-07-30 20:23:48.285 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-30 20:23:48.289 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-30 20:23:48.310 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.PaymentRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:23:48.310 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.RefreshTokenRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:23:48.310 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.TransactionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:23:48.310 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:23:48.310 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.WalletRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:23:48.320 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 18 ms. Found 1 Redis repository interface.
+2026-07-30 20:23:49.137 [main] INFO  [] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-30 20:23:49.157 [main] INFO  [] o.a.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-30 20:23:49.157 [main] INFO  [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-30 20:23:49.157 [main] INFO  [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-07-30 20:23:49.251 [main] INFO  [] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 2229 ms
+2026-07-30 20:23:49.476 [main] INFO  [] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-07-30 20:23:49.569 [main] INFO  [] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-07-30 20:23:50.310 [main] INFO  [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-30 20:23:50.368 [main] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-30 20:23:50.580 [main] INFO  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@9de1b85
+2026-07-30 20:23:50.583 [main] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-30 20:23:50.621 [main] WARN  [] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-30 20:23:50.646 [main] INFO  [] o.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/mydb]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 15.17
+	Default catalog/schema: mydb/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-07-30 20:23:52.202 [main] INFO  [] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-07-30 20:23:52.340 [main] INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-30 20:23:52.433 [main] INFO  [] o.s.d.j.r.q.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-30 20:23:54.776 [main] WARN  [] o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-30 20:23:54.920 [main] INFO  [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserServiceImpl
+2026-07-30 20:23:55.735 [main] INFO  [] o.a.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-30 20:23:55.767 [main] INFO  [] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-07-30 20:23:55.777 [main] INFO  [] c.rochak.payflow.PayflowApplication - Started PayflowApplication in 9.724 seconds (process running for 10.388)
+2026-07-30 20:24:03.050 [http-nio-8080-exec-2] INFO  [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-30 20:24:03.050 [http-nio-8080-exec-2] INFO  [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-30 20:24:03.053 [http-nio-8080-exec-2] INFO  [] o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-07-30 20:24:03.261 [http-nio-8080-exec-2] INFO  [3d6c9b2c-0fd7-4f6a-be95-8aedd6c1d609] c.r.p.service.impl.AuthServiceImpl - Login request recieved for email: elliewillams@gmail.com
+2026-07-30 20:24:04.227 [http-nio-8080-exec-2] INFO  [3d6c9b2c-0fd7-4f6a-be95-8aedd6c1d609] c.r.p.service.impl.AuthServiceImpl - Session created for user. UserId = 2, TokenId=com.rochak.payflow.session.UserSession@89820fc
+2026-07-30 20:24:04.374 [http-nio-8080-exec-2] INFO  [3d6c9b2c-0fd7-4f6a-be95-8aedd6c1d609] c.r.p.service.impl.AuthServiceImpl - Token generated successfully. UserId = 2, TokenId = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzg1NDQzMDQ0LCJleHAiOjE3ODU1Mjk0NDR9.-34g0rZx4fDwoOoX23SD9wUgkH5znHe-Or22c9IZrNfQRp5AIQYUvFvdx7qRdXD0eVJT_yaZwEqqC-YIUOZDjg
+2026-07-30 20:24:04.374 [http-nio-8080-exec-2] INFO  [3d6c9b2c-0fd7-4f6a-be95-8aedd6c1d609] c.r.p.service.impl.AuthServiceImpl - Refresh Token generated successfully. UserId = 2, TokenId = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwianRpIjoiZWMxOWMxZjktNTU3NC00Y2JiLTllN2MtYTFmNGE4NzU5OTMyIiwic2lkIjoiNTc4ZmU4ODUtOWE1NS00MThlLThkYTMtNGExMDk3ZWNiNDc2IiwiaWF0IjoxNzg1NDQzMDQ0LCJleHAiOjE3ODYwNDc4NDR9.wlAgobhkZKU6HQZoEXzs5w0GM-mCz-BUNeit7Rxbg0xCwgMCejSqojrAOfa_cmKm2r2x1jVhvMRLh-MdaOjh3g
+2026-07-30 20:25:38.961 [http-nio-8080-exec-5] INFO  [19805108-b167-4677-bffd-ac732c94ec46] c.r.p.service.impl.WalletServiceImpl - Transfer money request received
+2026-07-30 20:25:39.017 [http-nio-8080-exec-5] INFO  [19805108-b167-4677-bffd-ac732c94ec46] c.r.p.service.impl.WalletServiceImpl - Wallet locking done
+2026-07-30 20:25:39.036 [http-nio-8080-exec-5] INFO  [19805108-b167-4677-bffd-ac732c94ec46] c.r.p.service.impl.WalletServiceImpl - Validations complete, transaction is valid.
+2026-07-30 20:25:39.085 [http-nio-8080-exec-5] INFO  [19805108-b167-4677-bffd-ac732c94ec46] c.r.p.service.impl.WalletServiceImpl - Transaction Completed. Sender: 2, Reciever: 1, amount: 10.0
+2026-07-30 20:28:02.868 [SpringApplicationShutdownHook] INFO  [] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-07-30 20:28:02.877 [tomcat-shutdown] INFO  [] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-07-30 20:28:02.903 [SpringApplicationShutdownHook] INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-07-30 20:28:02.908 [SpringApplicationShutdownHook] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-07-30 20:28:02.913 [SpringApplicationShutdownHook] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-07-30 20:28:05.637 [background-preinit] INFO  [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-07-30 20:28:05.705 [main] INFO  [] com.rochak.payflow.PayflowApplication - Starting PayflowApplication using Java 21.0.10 with PID 29596 (C:\spring-projects\payflow\target\classes started by rocha in C:\spring-projects\payflow)
+2026-07-30 20:28:05.705 [main] INFO  [] com.rochak.payflow.PayflowApplication - No active profile set, falling back to 1 default profile: "default"
+2026-07-30 20:28:06.764 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-30 20:28:06.770 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-30 20:28:06.977 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JPA - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.UserSessionRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2026-07-30 20:28:07.008 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 227 ms. Found 5 JPA repository interfaces.
+2026-07-30 20:28:07.069 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-30 20:28:07.069 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-30 20:28:07.094 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.PaymentRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:28:07.094 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.RefreshTokenRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:28:07.094 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.TransactionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:28:07.094 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:28:07.094 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.WalletRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:28:07.103 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 21 ms. Found 1 Redis repository interface.
+2026-07-30 20:28:07.948 [main] INFO  [] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-30 20:28:07.967 [main] INFO  [] o.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-30 20:28:07.973 [main] INFO  [] o.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-30 20:28:07.973 [main] INFO  [] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-07-30 20:28:08.062 [main] INFO  [] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 2275 ms
+2026-07-30 20:28:08.268 [main] INFO  [] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-07-30 20:28:08.351 [main] INFO  [] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-07-30 20:28:08.979 [main] INFO  [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-30 20:28:09.020 [main] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-30 20:28:09.217 [main] INFO  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@8d7718e
+2026-07-30 20:28:09.220 [main] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-30 20:28:09.261 [main] WARN  [] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-30 20:28:09.301 [main] INFO  [] org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/mydb]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 15.17
+	Default catalog/schema: mydb/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-07-30 20:28:10.928 [main] INFO  [] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-07-30 20:28:11.064 [main] INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-30 20:28:11.160 [main] INFO  [] o.s.d.j.r.query.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-30 20:28:13.541 [main] WARN  [] o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-30 20:28:13.704 [main] INFO  [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserServiceImpl
+2026-07-30 20:28:14.493 [main] INFO  [] o.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-30 20:28:14.519 [main] INFO  [] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-07-30 20:28:14.532 [main] INFO  [] com.rochak.payflow.PayflowApplication - Started PayflowApplication in 9.728 seconds (process running for 10.372)
+2026-07-30 20:28:22.063 [http-nio-8080-exec-2] INFO  [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-30 20:28:22.063 [http-nio-8080-exec-2] INFO  [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-30 20:28:22.066 [http-nio-8080-exec-2] INFO  [] o.s.web.servlet.DispatcherServlet - Completed initialization in 3 ms
+2026-07-30 20:28:22.263 [http-nio-8080-exec-2] INFO  [a330246d-d99e-4301-888f-0d409d2ed11e] c.r.payflow.service.impl.AuthServiceImpl - Login request recieved for email: elliewillams@gmail.com
+2026-07-30 20:28:23.286 [http-nio-8080-exec-2] INFO  [a330246d-d99e-4301-888f-0d409d2ed11e] c.r.payflow.service.impl.AuthServiceImpl - Session created for user. UserId = 2, TokenId=com.rochak.payflow.session.UserSession@1b6e25da
+2026-07-30 20:28:23.426 [http-nio-8080-exec-2] INFO  [a330246d-d99e-4301-888f-0d409d2ed11e] c.r.payflow.service.impl.AuthServiceImpl - Token generated successfully. UserId = 2, TokenId = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzg1NDQzMzAzLCJleHAiOjE3ODU1Mjk3MDN9.zM-0pc7COlQLoltBI3KMQUiVpFTM5HwJjjfTP5gZM-LJvuDkF1coXYpShpolr8n3p_U2cerqJVYWeVq2pZPUOQ
+2026-07-30 20:28:23.427 [http-nio-8080-exec-2] INFO  [a330246d-d99e-4301-888f-0d409d2ed11e] c.r.payflow.service.impl.AuthServiceImpl - Refresh Token generated successfully. UserId = 2, TokenId = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwianRpIjoiYjM4MjhkODktOTE3OC00YjhiLTk3ZTYtMjYyYzljYTIwMzMxIiwic2lkIjoiOTU2ZjE0NmItNTkzZC00ZThhLTllMGEtNDAzMjcyOWU5NTJlIiwiaWF0IjoxNzg1NDQzMzAzLCJleHAiOjE3ODYwNDgxMDN9.1EcAcmWf43m5mE7p4BQwImSdggPRol-_sVIvSxOXgy_6qbNaNc9jLf4Iwc1qbzooYLonoeW2TWobDGD8OeeeRA
+2026-07-30 20:29:35.502 [SpringApplicationShutdownHook] INFO  [] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-07-30 20:29:35.513 [tomcat-shutdown] INFO  [] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-07-30 20:29:35.544 [SpringApplicationShutdownHook] INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-07-30 20:29:35.546 [SpringApplicationShutdownHook] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-07-30 20:29:35.548 [SpringApplicationShutdownHook] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-07-30 20:29:38.172 [background-preinit] INFO  [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-07-30 20:29:38.247 [main] INFO  [] com.rochak.payflow.PayflowApplication - Starting PayflowApplication using Java 21.0.10 with PID 32632 (C:\spring-projects\payflow\target\classes started by rocha in C:\spring-projects\payflow)
+2026-07-30 20:29:38.248 [main] INFO  [] com.rochak.payflow.PayflowApplication - No active profile set, falling back to 1 default profile: "default"
+2026-07-30 20:29:39.170 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-30 20:29:39.172 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-30 20:29:39.348 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JPA - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.UserSessionRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2026-07-30 20:29:39.376 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 192 ms. Found 5 JPA repository interfaces.
+2026-07-30 20:29:39.433 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-30 20:29:39.434 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-30 20:29:39.459 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.PaymentRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:29:39.459 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.RefreshTokenRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:29:39.459 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.TransactionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:29:39.460 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:29:39.460 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.WalletRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:29:39.469 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 20 ms. Found 1 Redis repository interface.
+2026-07-30 20:29:40.331 [main] INFO  [] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-30 20:29:40.350 [main] INFO  [] o.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-30 20:29:40.353 [main] INFO  [] o.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-30 20:29:40.353 [main] INFO  [] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-07-30 20:29:40.443 [main] INFO  [] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 2123 ms
+2026-07-30 20:29:40.641 [main] INFO  [] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-07-30 20:29:40.717 [main] INFO  [] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-07-30 20:29:41.423 [main] INFO  [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-30 20:29:41.473 [main] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-30 20:29:41.694 [main] INFO  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@8d7718e
+2026-07-30 20:29:41.697 [main] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-30 20:29:41.742 [main] WARN  [] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-30 20:29:41.778 [main] INFO  [] org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/mydb]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 15.17
+	Default catalog/schema: mydb/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-07-30 20:29:43.443 [main] INFO  [] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-07-30 20:29:43.575 [main] INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-30 20:29:43.670 [main] INFO  [] o.s.d.j.r.query.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-30 20:29:46.032 [main] WARN  [] o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-30 20:29:46.183 [main] INFO  [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserServiceImpl
+2026-07-30 20:29:46.952 [main] INFO  [] o.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-30 20:29:46.984 [main] INFO  [] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-07-30 20:29:47.001 [main] INFO  [] com.rochak.payflow.PayflowApplication - Started PayflowApplication in 9.69 seconds (process running for 10.354)
+2026-07-30 20:29:51.262 [http-nio-8080-exec-1] INFO  [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-30 20:29:51.262 [http-nio-8080-exec-1] INFO  [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-30 20:29:51.262 [http-nio-8080-exec-1] INFO  [] o.s.web.servlet.DispatcherServlet - Completed initialization in 0 ms
+2026-07-30 20:29:51.464 [http-nio-8080-exec-1] INFO  [515af22e-e704-450b-8bda-f76a65cf6a77] c.r.payflow.service.impl.AuthServiceImpl - Login request recieved for email: elliewillams@gmail.com
+2026-07-30 20:29:52.471 [http-nio-8080-exec-1] INFO  [515af22e-e704-450b-8bda-f76a65cf6a77] c.r.payflow.service.impl.AuthServiceImpl - Session created for user. UserId = 2, TokenId=com.rochak.payflow.session.UserSession@6628c294
+2026-07-30 20:29:52.612 [http-nio-8080-exec-1] INFO  [515af22e-e704-450b-8bda-f76a65cf6a77] c.r.payflow.service.impl.AuthServiceImpl - Token generated successfully. UserId = 2, TokenId = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzg1NDQzMzkyLCJleHAiOjE3ODU1Mjk3OTJ9.QEzU5QKytNOdwpBRiifUhMRMBfcyNCYaur6rcFsTspKxGI2aJ7pNVUUs-yYOl2AZjJ_89jO54wRJfjMEUf5UkA
+2026-07-30 20:29:52.613 [http-nio-8080-exec-1] INFO  [515af22e-e704-450b-8bda-f76a65cf6a77] c.r.payflow.service.impl.AuthServiceImpl - Refresh Token generated successfully. UserId = 2, TokenId = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwianRpIjoiZThiNTRlMjEtOTk5ZC00OWMxLWIyMjAtNTYyYWQ0NjExMWJkIiwic2lkIjoiYmJiYjI1ZDAtNzUwMC00MDQyLWEwM2UtNTc3NjBjMGYwMWJjIiwiaWF0IjoxNzg1NDQzMzkyLCJleHAiOjE3ODYwNDgxOTJ9.G-PFEQj60_Cx1PgEULLWV-gdyOHiKUaB6r-SVrK8cCrXLgC7hllVPZNBTRTH2MSWFBujCAzN-kLvGw2mDecp3w
+2026-07-30 20:32:27.951 [SpringApplicationShutdownHook] INFO  [] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-07-30 20:32:27.967 [tomcat-shutdown] INFO  [] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-07-30 20:32:27.997 [SpringApplicationShutdownHook] INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-07-30 20:32:27.998 [SpringApplicationShutdownHook] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-07-30 20:32:28.002 [SpringApplicationShutdownHook] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-07-30 20:32:30.781 [background-preinit] INFO  [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-07-30 20:32:30.850 [main] INFO  [] com.rochak.payflow.PayflowApplication - Starting PayflowApplication using Java 21.0.10 with PID 10268 (C:\spring-projects\payflow\target\classes started by rocha in C:\spring-projects\payflow)
+2026-07-30 20:32:30.850 [main] INFO  [] com.rochak.payflow.PayflowApplication - No active profile set, falling back to 1 default profile: "default"
+2026-07-30 20:32:31.900 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-30 20:32:31.910 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-30 20:32:32.105 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JPA - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.UserSessionRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2026-07-30 20:32:32.146 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 222 ms. Found 5 JPA repository interfaces.
+2026-07-30 20:32:32.197 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-30 20:32:32.197 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-30 20:32:32.218 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.PaymentRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:32:32.218 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.RefreshTokenRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:32:32.218 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.TransactionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:32:32.218 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:32:32.218 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.WalletRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:32:32.231 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 17 ms. Found 1 Redis repository interface.
+2026-07-30 20:32:33.056 [main] INFO  [] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-30 20:32:33.081 [main] INFO  [] o.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-30 20:32:33.081 [main] INFO  [] o.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-30 20:32:33.081 [main] INFO  [] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-07-30 20:32:33.176 [main] INFO  [] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 2252 ms
+2026-07-30 20:32:33.390 [main] INFO  [] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-07-30 20:32:33.469 [main] INFO  [] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-07-30 20:32:34.182 [main] INFO  [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-30 20:32:34.236 [main] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-30 20:32:34.476 [main] INFO  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@37b470df
+2026-07-30 20:32:34.478 [main] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-30 20:32:34.519 [main] WARN  [] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-30 20:32:34.560 [main] INFO  [] org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/mydb]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 15.17
+	Default catalog/schema: mydb/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-07-30 20:32:36.126 [main] INFO  [] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-07-30 20:32:36.242 [main] INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-30 20:32:36.326 [main] INFO  [] o.s.d.j.r.query.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-30 20:32:38.646 [main] WARN  [] o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-30 20:32:38.790 [main] INFO  [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserServiceImpl
+2026-07-30 20:32:39.547 [main] INFO  [] o.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-30 20:32:39.580 [main] INFO  [] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-07-30 20:32:39.588 [main] INFO  [] com.rochak.payflow.PayflowApplication - Started PayflowApplication in 9.65 seconds (process running for 10.268)
+2026-07-30 20:32:50.508 [http-nio-8080-exec-3] INFO  [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-07-30 20:32:50.509 [http-nio-8080-exec-3] INFO  [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-07-30 20:32:50.511 [http-nio-8080-exec-3] INFO  [] o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-07-30 20:33:05.087 [http-nio-8080-exec-2] INFO  [bb99c3cb-2aa2-457d-96a1-524a1b7024d7] c.r.payflow.service.impl.AuthServiceImpl - Login request recieved for email: elliewillams@gmail.com
+2026-07-30 20:33:06.090 [http-nio-8080-exec-2] INFO  [bb99c3cb-2aa2-457d-96a1-524a1b7024d7] c.r.payflow.service.impl.AuthServiceImpl - Session created for user. UserId = 2, TokenId=com.rochak.payflow.session.UserSession@aebbc1d
+2026-07-30 20:33:06.146 [http-nio-8080-exec-2] INFO  [bb99c3cb-2aa2-457d-96a1-524a1b7024d7] c.r.payflow.service.impl.AuthServiceImpl - Token generated successfully. UserId = 2, TokenId = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzg1NDQzNTg2LCJleHAiOjE3ODU1Mjk5ODZ9.zZfQ7RYocfGPeRXEKb9meAFOKaNagwHRtcgDeRBFswH3OikH3lZ0RBk3kmhvvBG3U7U99ZGU6PYj5B8sQF7pMA
+2026-07-30 20:33:06.147 [http-nio-8080-exec-2] INFO  [bb99c3cb-2aa2-457d-96a1-524a1b7024d7] c.r.payflow.service.impl.AuthServiceImpl - Refresh Token generated successfully. UserId = 2, TokenId = eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwianRpIjoiYWY3NmQzZGUtMGViNS00NzU2LWI5NzctMjU4MjZhMWEzM2JiIiwic2lkIjoiYWQxMmFiZGYtZGQ2Ni00NTlhLTg1NzYtNTU0OTExYjZmNWU1IiwiaWF0IjoxNzg1NDQzNTg2LCJleHAiOjE3ODYwNDgzODZ9.nnnQflIBAmBseQ9sy0omMxWP9bHfkKaLE2z3QnR9MwL9njcXFr__URJeZIFicHdnNb1lEAKfT5SO5h8OLfBtHA
+2026-07-30 20:37:05.636 [SpringApplicationShutdownHook] INFO  [] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-07-30 20:37:05.648 [tomcat-shutdown] INFO  [] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-07-30 20:37:05.683 [SpringApplicationShutdownHook] INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-07-30 20:37:05.685 [SpringApplicationShutdownHook] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-07-30 20:37:05.690 [SpringApplicationShutdownHook] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
+2026-07-30 20:37:08.552 [background-preinit] INFO  [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 9.0.1.Final
+2026-07-30 20:37:08.625 [main] INFO  [] com.rochak.payflow.PayflowApplication - Starting PayflowApplication using Java 21.0.10 with PID 30076 (C:\spring-projects\payflow\target\classes started by rocha in C:\spring-projects\payflow)
+2026-07-30 20:37:08.625 [main] INFO  [] com.rochak.payflow.PayflowApplication - No active profile set, falling back to 1 default profile: "default"
+2026-07-30 20:37:09.689 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-30 20:37:09.689 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-07-30 20:37:09.906 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data JPA - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.UserSessionRepository; If you want this repository to be a JPA repository, consider annotating your entities with one of these annotations: jakarta.persistence.Entity, jakarta.persistence.MappedSuperclass (preferred), or consider extending one of the following types with your repository: org.springframework.data.jpa.repository.JpaRepository
+2026-07-30 20:37:09.946 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 240 ms. Found 5 JPA repository interfaces.
+2026-07-30 20:37:10.001 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-07-30 20:37:10.001 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-07-30 20:37:10.029 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.PaymentRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:37:10.029 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.RefreshTokenRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:37:10.029 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.TransactionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:37:10.029 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:37:10.029 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.rochak.payflow.repository.WalletRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-07-30 20:37:10.040 [main] INFO  [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 23 ms. Found 1 Redis repository interface.
+2026-07-30 20:37:10.829 [main] INFO  [] o.s.boot.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-07-30 20:37:10.851 [main] INFO  [] o.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-07-30 20:37:10.856 [main] INFO  [] o.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-07-30 20:37:10.856 [main] INFO  [] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/11.0.20]
+2026-07-30 20:37:10.949 [main] INFO  [] o.s.b.w.c.s.WebApplicationContextInitializer - Root WebApplicationContext: initialization completed in 2248 ms
+2026-07-30 20:37:11.165 [main] INFO  [] org.hibernate.orm.jpa - HHH008540: Processing PersistenceUnitInfo [name: default]
+2026-07-30 20:37:11.248 [main] INFO  [] org.hibernate.orm.core - HHH000001: Hibernate ORM core version 7.2.7.Final
+2026-07-30 20:37:11.901 [main] INFO  [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-07-30 20:37:11.938 [main] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-07-30 20:37:12.156 [main] INFO  [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@19d9ba89
+2026-07-30 20:37:12.158 [main] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-07-30 20:37:12.205 [main] WARN  [] org.hibernate.orm.deprecation - HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-07-30 20:37:12.241 [main] INFO  [] org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/mydb]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 15.17
+	Default catalog/schema: mydb/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DataSourceConnectionProvider
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-07-30 20:37:13.894 [main] INFO  [] org.hibernate.orm.core - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-07-30 20:37:14.023 [main] INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-07-30 20:37:14.118 [main] INFO  [] o.s.d.j.r.query.QueryEnhancerFactories - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-07-30 20:37:16.491 [main] WARN  [] o.s.b.j.a.JpaBaseConfiguration$JpaWebConfiguration - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-07-30 20:37:16.644 [main] INFO  [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name customUserServiceImpl
+2026-07-30 20:37:17.349 [main] INFO  [] o.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-07-30 20:37:17.381 [main] INFO  [] o.s.boot.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-07-30 20:37:17.398 [main] INFO  [] com.rochak.payflow.PayflowApplication - Started PayflowApplication in 9.696 seconds (process running for 10.371)
+2026-07-30 20:37:22.200 [SpringApplicationShutdownHook] INFO  [] o.s.boot.tomcat.GracefulShutdown - Commencing graceful shutdown. Waiting for active requests to complete
+2026-07-30 20:37:22.214 [tomcat-shutdown] INFO  [] o.s.boot.tomcat.GracefulShutdown - Graceful shutdown complete
+2026-07-30 20:37:22.237 [SpringApplicationShutdownHook] INFO  [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Closing JPA EntityManagerFactory for persistence unit 'default'
+2026-07-30 20:37:22.237 [SpringApplicationShutdownHook] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown initiated...
+2026-07-30 20:37:22.237 [SpringApplicationShutdownHook] INFO  [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Shutdown completed.
