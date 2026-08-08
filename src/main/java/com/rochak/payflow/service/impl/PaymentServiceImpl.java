@@ -1,11 +1,14 @@
 package com.rochak.payflow.service.impl;
 
 import com.razorpay.Order;
-import com.razorpay.RazorpayClient;
+//import com.razorpay.RazorpayClient;
+import com.rochak.payflow.client.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
 import com.razorpay.Utils;
 import com.rochak.payflow.dto.payment.CreatePaymentRequestDTO;
 import com.rochak.payflow.dto.payment.CreatePaymentResponseDTO;
+import com.rochak.payflow.dto.razorpay.RazorpayOrderRequest;
+import com.rochak.payflow.dto.razorpay.RazorpayOrderResponse;
 import com.rochak.payflow.dto.request.PaymentVerificationRequestDTO;
 import com.rochak.payflow.entity.Payment;
 import com.rochak.payflow.entity.PaymentFailureReason;
@@ -49,40 +52,60 @@ public class PaymentServiceImpl implements PaymentService {
     public CreatePaymentResponseDTO createPayment(CreatePaymentRequestDTO request) {
         try{
             String receipt = "PAY_"+ UUID.randomUUID();
-            JSONObject options = new JSONObject();
-            options.put("amount", (int)(request.getAmount()*100));
-            options.put("currency", "INR");
-            options.put("receipt", receipt);
+//            JSONObject options = new JSONObject();
+//            options.put("amount", (int)(request.getAmount()*100));
+//            options.put("currency", "INR");
+//            options.put("receipt", receipt);
+            RazorpayOrderRequest razorpayOrderRequest = RazorpayOrderRequest.builder()
+                                                            .amount((int)(request.getAmount()*100))
+                                                            .currency("INR")
+                                                            .receipt(receipt)
+                                                            .build();
             log.info("Creating order with values: Amount: {}, Currency: {}, Receipt: {}", (int)(request.getAmount()*100),
                     "INR",
                     receipt);
 
-            Order order = razorpayClient.orders.create(options);
+//            Order order = razorpayClient.orders.create(options);
+            RazorpayOrderResponse order = razorpayClient.createOrder(razorpayOrderRequest).block();
 
             User user = userRepository.findByEmail(SecurityUtils.getCurrentUserEmail())
                     .orElseThrow(
                             ()->new ResourceNotFoundException("User not found")
                     );
 
+            LocalDateTime now = LocalDateTime.now();
+
             Payment payment = Payment.builder()
-                    .razorpayOrderId(order.get("id"))
+//                    .razorpayOrderId(order.get("id"))
+                    .razorpayOrderId(order.getId())
                     .amount(request.getAmount())
                     .status(PaymentStatus.PENDING)
                     .user(user)
-                    .createdAt(LocalDateTime.now())
+                    .createdAt(now)
+                    .updatedAt(now)
+                    .failureReason(PaymentFailureReason.NONE)
                     .receiptId(receipt)
                     .build();
 
             paymentRepository.save(payment);
-            log.info("Created payment for User: {} Order ID: {}", user.getId(), order.get("id"));
+            log.info("Created payment for User: {} Order ID: {}", user.getId(), order.getId());
 
             return CreatePaymentResponseDTO
                     .builder()
-                    .orderId(order.get("id"))
-                    .amount(order.get("amount"))
-                    .currency(order.get("currency"))
+                    .orderId(order.getId())
+                    .amount(order.getAmount())
+                    .currency(order.getCurrency())
+                    .paymentId(payment.getId())
+                    .status(payment.getStatus())
+//                    .orderId(order.get("id"))
+//                    .amount(order.get("amount"))
+//                    .currency(order.get("currency"))
                     .build();
-        } catch (RazorpayException e) {
+        }
+//        catch (RazorpayException e) {
+//            throw new PaymentCreationException("Failed to create Razorpay Order",e);
+//        }
+        catch (Exception e){
             throw new PaymentCreationException("Failed to create Razorpay Order",e);
         }
     }
