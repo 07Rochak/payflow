@@ -24,11 +24,11 @@ public class WalletController {
         return new ResponseEntity<>(walletService.getWalletByEmail(email), HttpStatus.OK);
     }
 
-    @PostMapping("/{id}/add-money")
-    public ResponseEntity<WalletResponseDTO> addMoney(@PathVariable Long id,
-                                                      @RequestBody @Valid AddMoneyRequestDTO request){
-        return new ResponseEntity<>(walletService.addMoney(id, request), HttpStatus.OK);
-    }
+//    @PostMapping("/{id}/add-money")
+//    public ResponseEntity<WalletResponseDTO> addMoney(@PathVariable Long id,
+//                                                      @RequestBody @Valid AddMoneyRequestDTO request){
+//        return new ResponseEntity<>(walletService.addMoney(id, request), HttpStatus.OK);
+//    }
 
     @PostMapping("/transfer")
     public ResponseEntity<WalletResponseDTO> transferMoney(@RequestBody @Valid TransferRequestDTO requestDTO){

@@ -1,7 +1,10 @@
 package com.rochak.payflow.entity;
 
 public enum PaymentStatus {
+    CREATED,
     PENDING,
     SUCCESS,
-    FAILED
+    FAILED,
+    EXPIRED,
+    CANCELLED
 }

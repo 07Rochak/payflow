@@ -1,7 +1,7 @@
 package com.rochak.payflow.controller;
 
-import com.rochak.payflow.dto.order.CreateOrderRequestDTO;
-import com.rochak.payflow.dto.order.CreateOrderResponseDTO;
+import com.rochak.payflow.dto.payment.CreatePaymentRequestDTO;
+import com.rochak.payflow.dto.payment.CreatePaymentResponseDTO;
 import com.rochak.payflow.dto.request.PaymentVerificationRequestDTO;
 import com.rochak.payflow.security.SecurityUtils;
 import com.rochak.payflow.service.PaymentService;
@@ -21,8 +21,8 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping("/create-order")
-    public ResponseEntity<CreateOrderResponseDTO> createOrder(@RequestBody @Valid CreateOrderRequestDTO request){
-        return ResponseEntity.ok(paymentService.createOrder(request));
+    public ResponseEntity<CreatePaymentResponseDTO> createOrder(@RequestBody @Valid CreatePaymentRequestDTO request){
+        return ResponseEntity.ok(paymentService.createPayment(request));
     }
 
     @PostMapping("/verify")

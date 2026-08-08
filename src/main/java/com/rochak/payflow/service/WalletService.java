@@ -13,4 +13,5 @@ public interface WalletService {
     WalletResponseDTO withdrawMoney(String email, WithdrawRequestDto request);
     void freezeWallet(long walletId);
     void unFreezeWallet(long walletId);
+    WalletResponseDTO creditWallet(Long userId, Double amount, String description, String paymentReference);
 }

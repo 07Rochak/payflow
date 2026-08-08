@@ -45,4 +45,7 @@ public class Transaction {
 
     @Column(length = 255)
     private String description;
+
+    @Column(length = 100)
+    private String externalReference;
 }

@@ -83,4 +83,40 @@ public class GlobalExceptionHandler {
         log.warn("Invalid Session: {}", ex.getMessage());
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(DataAccessException.class)
+    public ResponseEntity<String> handleDataAccessException(DataAccessException ex){
+        log.warn("Database error: {}", ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PaymentAlreadyProcessedException.class)
+    public ResponseEntity<String> handlePaymentAlreadyProcessedException(PaymentAlreadyProcessedException ex){
+        log.warn("Payment has been already processed: {}", ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PaymentCreationException.class)
+    public ResponseEntity<String> handlePaymentCreationException(PaymentCreationException ex){
+        log.warn("Payment is already created: {}", ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PaymentProcessingException.class)
+    public ResponseEntity<String> handlePaymentProcessingException(PaymentProcessingException ex){
+        log.warn("Payment processing error: {}", ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PaymentVerificationException.class)
+    public ResponseEntity<String> handlePaymentVerificationException(PaymentVerificationException ex){
+        log.warn("Invalid payment signature: {}", ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(WalletLimitExceededException.class)
+    public ResponseEntity<String> handleWalletLimitExceededException(WalletLimitExceededException ex){
+        log.warn("Wallet exceeding its limits: {}", ex.getMessage());
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 }

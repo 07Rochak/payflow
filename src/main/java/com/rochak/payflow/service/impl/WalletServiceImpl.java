@@ -59,31 +59,32 @@ public class WalletServiceImpl implements WalletService {
     @Transactional
     public WalletResponseDTO addMoney(Long userId, AddMoneyRequestDTO request) {
         log.info("Add Money request Received. User: {}, amount: {}", userId, request.getAmount());
-        Wallet wallet = walletRepository.findByUser_Id(userId)
-                .orElseThrow(
-                        ()-> new ResourceNotFoundException("Wallet not found")
-                );
-        Double newBalance = wallet.getBalance() + request.getAmount();
-        if(newBalance.compareTo(walletLimitConfig.getMaxBalance())>0){
-            throw new WalletLimitExceededException(
-                    "Maximum wallet balance exceeded. Money addition declined"
-            );
-        }
-        wallet.setBalance(wallet.getBalance() + request.getAmount());
-        log.info("Validation Successful. Creating Transaction");
-        Transaction transaction = Transaction.builder()
-                .receiverWallet(wallet)
-                .amount(request.getAmount())
-                .transactionType(TransactionType.DEPOSIT)
-                .status(TransactionStatus.SUCCESS)
-                .category(TransactionCategory.CREDIT)
-                .description("Adding money to wallet")
-                .createdAt(LocalDateTime.now())
-                .build();
-        transactionRepository.save(transaction);
-        walletRepository.save(wallet);
-        log.info("Wallet Updated. Walled ID: {}, Balance: {}", wallet.getId(), wallet.getBalance());
-        return WalletMapper.mapToResponse(wallet);
+        return creditWallet(userId, request.getAmount(), "Wallet top-up", null);
+//        Wallet wallet = walletRepository.findByUser_Id(userId)
+//                .orElseThrow(
+//                        ()-> new ResourceNotFoundException("Wallet not found")
+//                );
+//        Double newBalance = wallet.getBalance() + request.getAmount();
+//        if(newBalance.compareTo(walletLimitConfig.getMaxBalance())>0){
+//            throw new WalletLimitExceededException(
+//                    "Maximum wallet balance exceeded. Money addition declined"
+//            );
+//        }
+//        wallet.setBalance(wallet.getBalance() + request.getAmount());
+//        log.info("Validation Successful. Creating Transaction");
+//        Transaction transaction = Transaction.builder()
+//                .receiverWallet(wallet)
+//                .amount(request.getAmount())
+//                .transactionType(TransactionType.DEPOSIT)
+//                .status(TransactionStatus.SUCCESS)
+//                .category(TransactionCategory.CREDIT)
+//                .description("Adding money to wallet")
+//                .createdAt(LocalDateTime.now())
+//                .build();
+//        transactionRepository.save(transaction);
+//        walletRepository.save(wallet);
+//        log.info("Wallet Updated. Walled ID: {}, Balance: {}", wallet.getId(), wallet.getBalance());
+//        return WalletMapper.mapToResponse(wallet);
     }
 
     @Override
@@ -142,7 +143,7 @@ public class WalletServiceImpl implements WalletService {
         Double projectedAmount = todayTransferAmount + transferRequestDTO.getAmount();
 
         if(projectedAmount > walletLimitConfig.getDailyTransferLimit()) {
-            throw new WalletLimitExceededException("Daily Transfer limit exceeded");
+            throw new WalletLimitExceededException("Daily Transfer limit exceeded", sender.getBalance(), todayTransferAmount, walletLimitConfig.getDailyTransferLimit());
         }
 
         Wallet  receiver = second.getUser().getId().equals(receiverUserId) ? second : first;
@@ -171,9 +172,7 @@ public class WalletServiceImpl implements WalletService {
         }
         Double receiverNewBalance = receiver.getBalance() + transferRequestDTO.getAmount();
         if (receiverNewBalance.compareTo(walletLimitConfig.getMaxBalance()) > 0) {
-            throw new WalletLimitExceededException(
-                    "Maximum wallet balance exceeded"
-            );
+            throw new WalletLimitExceededException("Maximum wallet balance exceeded", receiver.getBalance(), transferRequestDTO.getAmount(), walletLimitConfig.getMaxBalance());
         }
         log.info("Validations complete, transaction is valid.");
         sender.setBalance(sender.getBalance() - transferRequestDTO.getAmount());
@@ -227,7 +226,7 @@ public class WalletServiceImpl implements WalletService {
         double projectedWithdrawAmount = todayWithdrawalAmount + request.getAmount();
 
         if(projectedWithdrawAmount > walletLimitConfig.getDailyWithdrawalLimit()) {
-            throw new WalletLimitExceededException("Daily withdrawal limit exceeded");
+            throw new WalletLimitExceededException("Daily withdrawal limit exceeded", wallet.getBalance(), request.getAmount(), walletLimitConfig.getDailyWithdrawalLimit());
         }
         log.info("Validations successful, transaction is valid");
 
@@ -282,6 +281,35 @@ public class WalletServiceImpl implements WalletService {
         wallet.setFrozen(false);
         walletRepository.save(wallet);
         log.info("Wallet ID: {} unfrozen", walletId);
+    }
+
+    @Override
+    public WalletResponseDTO creditWallet(Long userId, Double amount, String description, String paymentReference) {
+        log.info("Add Money request Received. User: {}, amount: {}", userId, amount);
+        Wallet wallet = walletRepository.findByUser_Id(userId)
+                .orElseThrow(
+                        ()-> new ResourceNotFoundException("Wallet not found")
+                );
+        Double newBalance = wallet.getBalance() + amount;
+        if(newBalance.compareTo(walletLimitConfig.getMaxBalance())>0){
+            throw new WalletLimitExceededException("Maximum wallet balance exceeded. Money addition declined", wallet.getBalance(), amount, walletLimitConfig.getMaxBalance());
+        }
+        wallet.setBalance(wallet.getBalance() + amount);
+        log.info("Validation Successful. Creating Transaction");
+        Transaction transaction = Transaction.builder()
+                .receiverWallet(wallet)
+                .amount(amount)
+                .transactionType(TransactionType.DEPOSIT)
+                .status(TransactionStatus.SUCCESS)
+                .category(TransactionCategory.CREDIT)
+                .description(description)
+                .createdAt(LocalDateTime.now())
+                .externalReference(paymentReference)
+                .build();
+        transactionRepository.save(transaction);
+        walletRepository.save(wallet);
+        log.info("Wallet Updated. Walled ID: {}, Balance: {}", wallet.getId(), wallet.getBalance());
+        return WalletMapper.mapToResponse(wallet);
     }
 
 

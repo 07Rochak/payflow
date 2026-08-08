@@ -35,4 +35,16 @@ public class Payment {
     private User user;
 
     private LocalDateTime createdAt;
+
+    private LocalDateTime verifiedAt;
+
+    private LocalDateTime updatedAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private PaymentFailureReason failureReason = PaymentFailureReason.NONE;
+
+    @Column(nullable = false, unique = true)
+    private String receiptId;
 }
