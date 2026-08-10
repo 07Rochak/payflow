@@ -105,6 +105,9 @@ public class PaymentServiceImpl implements PaymentService {
 //        catch (RazorpayException e) {
 //            throw new PaymentCreationException("Failed to create Razorpay Order",e);
 //        }
+        catch (RazorpayClientException e) {
+            throw e;
+        }
         catch (Exception e){
             throw new PaymentCreationException("Failed to create Razorpay Order",e);
         }

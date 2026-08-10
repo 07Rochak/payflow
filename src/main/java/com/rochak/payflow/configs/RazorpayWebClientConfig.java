@@ -1,9 +1,13 @@
 package com.rochak.payflow.configs;
 
+import io.netty.channel.ChannelOption;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.netty.http.client.HttpClient;
+
+import java.time.Duration;
 
 @Configuration
 public class RazorpayWebClientConfig {
@@ -18,6 +22,11 @@ public class RazorpayWebClientConfig {
 
     @Bean
     public WebClient razorpayWebClient(){
+
+        HttpClient httpClient = HttpClient.create()
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000)
+                .responseTimeout(Duration.ofSeconds(5));
+
         return WebClient.builder().baseUrl(baseUrl)
                 .defaultHeaders(headers ->
                         headers.setBasicAuth(keyId, keySecret))

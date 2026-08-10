@@ -119,4 +119,19 @@ public class GlobalExceptionHandler {
         log.warn("Wallet exceeding its limits: {}", ex.getMessage());
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(RazorpayClientException.class)
+    public ResponseEntity<String> handleRazorpayClientException(RazorpayClientException ex){
+        log.warn("Razorpay client error: status: {} message: {}", ex.getStatusCode(), ex.getMessage());
+        HttpStatus status;
+
+        if(ex.getStatusCode() >= 400 && ex.getStatusCode() < 500){
+            status=HttpStatus.BAD_REQUEST;
+        } else if (ex.getStatusCode() >= 500) {
+            status=HttpStatus.BAD_GATEWAY;
+        } else {
+            status = HttpStatus.BAD_GATEWAY;
+        }
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_GATEWAY);
+    }
 }
