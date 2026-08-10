@@ -42,7 +42,7 @@ public class RazorpayWebClientTimeoutTest {
 
     @AfterEach
     void tearDown(){
-        server.stop(0x);
+        server.stop(0);
     }
 
     @Test
