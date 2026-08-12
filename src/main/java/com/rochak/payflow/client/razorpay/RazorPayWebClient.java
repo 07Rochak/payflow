@@ -10,7 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
+import reactor.util.retry.Retry;
 
+import java.time.Duration;
 import java.util.concurrent.TimeoutException;
 
 @Component
@@ -63,17 +65,21 @@ public class RazorPayWebClient implements RazorpayClient{
                 .onErrorMap(
                         exception -> !(exception instanceof RazorpayClientException),
                         exception -> new RazorpayClientException("Failed to communicate with Razorpay", 0, exception)
+                )
+                .retryWhen(
+                        Retry.backoff(2, Duration.ofMillis(500))
+                                .filter(this::isRetryable)
                 );
     }
-
-    private boolean isTimeoutException(Throwable exception) {
-        Throwable current = exception;
-        while (current!=null) {
-            if(current instanceof TimeoutException || current instanceof ReadTimeoutException){
-                return true;
-            }
-            current = current.getCause();
+    private boolean isRetryable(Throwable exception){
+        if(!(exception instanceof RazorpayClientException razorpayClientException)){
+            return false;
         }
-        return false;
+        int statusCode = razorpayClientException.getStatusCode();
+
+        if(statusCode == 0) { // for network and timeout failures
+            return true;
+        }
+        return statusCode >=500 && statusCode<600; // for provider and server side failures
     }
 }
