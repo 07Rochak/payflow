@@ -29,7 +29,9 @@ class AuthServiceImplTest {
     @Mock IpExtractor ipExtractor;
     @Mock HttpServletRequest request;
 
-    private AuthServiceImpl service() { return new AuthServiceImpl(userRepository,passwordEncoder,jwtService,sessionService,deviceExtractor,ipExtractor); }
+    private AuthServiceImpl service() {
+        return new AuthServiceImpl(userRepository,passwordEncoder,jwtService,sessionService,deviceExtractor,ipExtractor);
+    }
 
     @Test void login_shouldCreateSessionAndTokens() {
         User user=new User(1L,"a@b.com","A","encoded",Role.USER);

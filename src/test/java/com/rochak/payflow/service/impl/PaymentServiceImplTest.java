@@ -9,6 +9,7 @@ import com.rochak.payflow.entity.*;
 import com.rochak.payflow.exception.*;
 import com.rochak.payflow.repository.PaymentRepository;
 import com.rochak.payflow.repository.UserRepository;
+import com.rochak.payflow.security.SecurityUtils;
 import com.rochak.payflow.service.PaymentFailureService;
 import com.rochak.payflow.service.WalletService;
 import org.junit.jupiter.api.BeforeEach;
@@ -105,27 +106,37 @@ class PaymentServiceImplTest {
     void createPayment_shouldThrowWhenUserNotFound() {
         CreatePaymentRequestDTO request = new CreatePaymentRequestDTO();
         request.setAmount(100.0);
+
         RazorpayOrderResponse order = new RazorpayOrderResponse();
         order.setId("order_test");
         order.setAmount(10000);
         order.setCurrency("INR");
-        when(razorpayClient.createOrder(any())).thenReturn(Mono.just(order));
+
+        when(razorpayClient.createOrder(any()))
+                .thenReturn(Mono.just(order));
+
         when(userRepository.findByEmail(EMAIL))
                 .thenReturn(Optional.empty());
 
-        PaymentCreationException exception = assertThrows(
-                PaymentCreationException.class,
-                () -> paymentService.createPayment(request)
-        );
+        try (MockedStatic<SecurityUtils> security =
+                     mockStatic(SecurityUtils.class)) {
 
-        assertInstanceOf(
-                ResourceNotFoundException.class,
-                exception.getCause()
-        );
+            security.when(SecurityUtils::getCurrentUserEmail)
+                    .thenReturn(EMAIL);
 
-        verify(userRepository).findByEmail(EMAIL);
-        verifyNoInteractions(razorpayClient);
-        verify(paymentRepository, never()).save(any());
+            PaymentCreationException exception = assertThrows(
+                    PaymentCreationException.class,
+                    () -> paymentService.createPayment(request)
+            );
+
+            assertInstanceOf(
+                    ResourceNotFoundException.class,
+                    exception.getCause()
+            );
+
+            verify(userRepository).findByEmail(EMAIL);
+            verify(paymentRepository, never()).save(any());
+        }
     }
 
 

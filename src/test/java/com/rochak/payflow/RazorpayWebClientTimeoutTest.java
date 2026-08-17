@@ -11,14 +11,14 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.service.annotation.HttpExchange;
+import reactor.core.Exceptions;
 import reactor.netty.http.client.HttpClient;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.time.Duration;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RazorpayWebClientTimeoutTest {
 
@@ -46,7 +46,8 @@ public class RazorpayWebClientTimeoutTest {
     }
 
     @Test
-    void shouldThrowRazorpayClientExceptionWhenRequestTimesOut() {
+    void shouldThrowRetryExhaustedExceptionWhenRequestTimesOut() {
+
         HttpClient httpClient = HttpClient.create()
                 .responseTimeout(Duration.ofSeconds(5));
 
@@ -55,7 +56,8 @@ public class RazorpayWebClientTimeoutTest {
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .build();
 
-        RazorPayWebClient razorPayWebClient = new RazorPayWebClient(webClient);
+        RazorPayWebClient razorPayWebClient =
+                new RazorPayWebClient(webClient);
 
         RazorpayOrderRequest request = RazorpayOrderRequest.builder()
                 .amount(10000)
@@ -63,8 +65,24 @@ public class RazorpayWebClientTimeoutTest {
                 .receipt("TEST_RECEIPT")
                 .build();
 
-        RazorpayClientException exception = assertThrows(RazorpayClientException.class, () -> razorPayWebClient.createOrder(request).block());
-        assertEquals("Razorpay request timed out", exception.getMessage());
+        RuntimeException exception = assertThrows(
+                RuntimeException.class,
+                () -> razorPayWebClient.createOrder(request).block()
+        );
+
+        assertTrue(
+                Exceptions.isRetryExhausted(exception)
+        );
+
+        assertInstanceOf(
+                RazorpayClientException.class,
+                exception.getCause()
+        );
+
+        assertEquals(
+                "Razorpay request timed out",
+                exception.getCause().getMessage()
+        );
     }
 
 }
