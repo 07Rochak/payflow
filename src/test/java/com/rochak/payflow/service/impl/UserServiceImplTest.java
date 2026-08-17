@@ -66,7 +66,7 @@ class UserServiceImplTest {
         User u = new User(1L,"old@b.com","Old","p",Role.USER);
         when(userRepository.findById(1L)).thenReturn(Optional.of(u));
         when(userRepository.save(u)).thenReturn(u);
-        var response = service.updateUser(1L, new UserRequestDTO("New","new@b.com"));
+        var response = service.updateUser("old@b.com", new UserRequestDTO("New","new@b.com"));
         assertEquals("New", response.getName());
         assertEquals("new@b.com", response.getEmail());
     }

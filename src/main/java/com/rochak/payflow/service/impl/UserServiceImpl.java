@@ -11,10 +11,12 @@ import com.rochak.payflow.exception.ResourceNotFoundException;
 import com.rochak.payflow.mapper.UserMapper;
 import com.rochak.payflow.repository.UserRepository;
 import com.rochak.payflow.repository.WalletRepository;
+import com.rochak.payflow.service.SessionService;
 import com.rochak.payflow.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +31,8 @@ public class UserServiceImpl implements UserService {
 
     private WalletRepository walletRepository;
 
+    private SessionService sessionService;
+
 //    public UserServiceImpl(BCryptPasswordEncoder passwordEncoder){
 //        this.passwordEncoder=passwordEncoder;
 //            }
@@ -41,6 +45,24 @@ public class UserServiceImpl implements UserService {
         User user = UserMapper.mapToNewEntity(userDTO);
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setRole(Role.USER);
+        User savedUser = userRepository.save(user);
+
+        Wallet wallet = new Wallet();
+        wallet.setUser(savedUser);
+        wallet.setBalance(0.0);
+        walletRepository.save(wallet);
+        UserResponseDTO savedUserDto = UserMapper.mapToResponse(savedUser);
+        return savedUserDto;
+    }
+
+    @Override
+    public UserResponseDTO createAdminUser(CreateUserRequestDTO userDTO) {
+        if(userRepository.existsByEmail(userDTO.getEmail())){
+            throw new RuntimeException("Email already exists");
+        }
+        User user = UserMapper.mapToNewEntity(userDTO);
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setRole(Role.ADMIN);
         User savedUser = userRepository.save(user);
 
         Wallet wallet = new Wallet();
@@ -75,17 +97,60 @@ public class UserServiceImpl implements UserService {
         return UserMapper.mapToResponse(user);
     }
 
+//    @Override
+//    public UserResponseDTO updateUser(String email, UserRequestDTO userRequestDTO) {
+//        User user = userRepository.findByEmail(email)
+//                .orElseThrow(
+//                        () -> new ResourceNotFoundException("No user with email: "+email)
+//                );
+//        if (!email.equals(userRequestDTO.getEmail()) && userRepository.existsByEmail(userRequestDTO.getEmail())) {
+//            throw new RuntimeException("Email already exists");
+//        }
+//        user.setName(userRequestDTO.getName());
+//        user.setEmail(userRequestDTO.getEmail());
+//        User savedUser = userRepository.save(user);
+//        UserResponseDTO userResponseDTO = UserMapper.mapToResponse(savedUser);
+//        return userResponseDTO;
+//    }
+
     @Override
-    public UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO) {
-        User user = userRepository.findById(id)
+    @Transactional
+    public UserResponseDTO updateUser(
+            String currentEmail,
+            UserRequestDTO userRequestDTO) {
+
+        User user = userRepository.findByEmail(currentEmail)
                 .orElseThrow(
-                        () -> new ResourceNotFoundException("No user with id: "+id)
+                        () -> new ResourceNotFoundException(
+                                "No user with email: " + currentEmail
+                        )
                 );
+
+        String newEmail = userRequestDTO.getEmail();
+
+        // Check whether the requested email is already used
+        // by another user.
+        if (!currentEmail.equals(newEmail)
+                && userRepository.existsByEmail(newEmail)) {
+
+            throw new RuntimeException("Email already exists");
+        }
+
+        boolean emailChanged = !currentEmail.equals(newEmail);
+
         user.setName(userRequestDTO.getName());
-        user.setEmail(userRequestDTO.getEmail());
+        user.setEmail(newEmail);
+
         User savedUser = userRepository.save(user);
-        UserResponseDTO userResponseDTO = UserMapper.mapToResponse(savedUser);
-        return userResponseDTO;
+
+        // Email is part of the authentication identity.
+        // Invalidate all existing sessions so the user must
+        // authenticate again with the new email.
+        if (emailChanged) {
+            sessionService.deleteAllSessions(savedUser.getId());
+        }
+
+        return UserMapper.mapToResponse(savedUser);
     }
 
     @Override
@@ -98,10 +163,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePassword(Long userId, ChangePasswordDto request) {
-        User user = userRepository.findById(userId)
+    public void changePassword(String email, ChangePasswordDto request) {
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(
-                        () -> new ResourceNotFoundException("No user with id: "+userId)
+                        () -> new ResourceNotFoundException("No user with email: "+email)
                 );
         if (!passwordEncoder.matches(request.getOldPassword(), user.getPassword())) {
             throw new RuntimeException("Old password is incorrect");

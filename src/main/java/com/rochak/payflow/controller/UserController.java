@@ -4,6 +4,7 @@ import com.rochak.payflow.dto.ChangePasswordDto;
 import com.rochak.payflow.dto.request.CreateUserRequestDTO;
 import com.rochak.payflow.dto.request.UserRequestDTO;
 import com.rochak.payflow.dto.response.UserResponseDTO;
+import com.rochak.payflow.security.SecurityUtils;
 import com.rochak.payflow.service.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @AllArgsConstructor
@@ -37,10 +39,33 @@ public class UserController {
 //        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
 //    }
 //
-//    @PutMapping("/{id}")
-//    public ResponseEntity<UserResponseDTO> udpateUser(@PathVariable Long id, @Valid @RequestBody UserRequestDTO userRequestDTO){
-//        return new ResponseEntity<>(userService.updateUser(id, userRequestDTO), HttpStatus.OK);
-//    }
+    @PutMapping("/me")
+    public ResponseEntity<Map<String, Object>> updateUser(@Valid @RequestBody UserRequestDTO userRequestDTO){
+        String currentEmail = SecurityUtils.getCurrentUserEmail();
+
+        UserResponseDTO updatedUser =
+                userService.updateUser(currentEmail, userRequestDTO);
+
+        boolean emailChanged = !currentEmail.equals(userRequestDTO.getEmail());
+
+        if (emailChanged) {
+            return ResponseEntity.ok(
+                    Map.of(
+                            "message", "Profile updated successfully. Email was changed, so please log in again.",
+                            "requiresLogin", true,
+                            "user", updatedUser
+                    )
+            );
+        }
+
+        return ResponseEntity.ok(
+                Map.of(
+                        "message", "Profile updated successfully.",
+                        "requiresLogin", false,
+                        "user", updatedUser
+                )
+        );
+    }
 //
 //    @DeleteMapping("/{id}")
 //    public ResponseEntity<String> deleteUser(@PathVariable Long id){
@@ -48,10 +73,10 @@ public class UserController {
 //        return new ResponseEntity<>("User deleted successfully",HttpStatus.OK);
 //    }
 
-    @PutMapping("/{id}/change-password")
-    public ResponseEntity<String> changePassword(@PathVariable Long id,
-                               @RequestBody @Valid ChangePasswordDto request) {
-        userService.changePassword(id, request);
+    @PutMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody @Valid ChangePasswordDto request) {
+        String email = SecurityUtils.getCurrentUserEmail();
+        userService.changePassword(email, request);
         return new ResponseEntity<>("Password changed successfully", HttpStatus.OK);
     }
 }

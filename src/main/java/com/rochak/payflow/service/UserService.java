@@ -11,17 +11,19 @@ import java.util.List;
 public interface UserService {
     UserResponseDTO createUser(CreateUserRequestDTO user);
 
+    UserResponseDTO createAdminUser(CreateUserRequestDTO user);
+
     UserResponseDTO getUserById(Long id);
 
     List<UserResponseDTO> getAllUsers();
 
     UserResponseDTO getUserByEmail(String email);
 
-    UserResponseDTO updateUser(Long id, UserRequestDTO userRequestDTO);
+    UserResponseDTO updateUser(String email, UserRequestDTO userRequestDTO);
 
     void deleteUser(Long id);
 
-    void changePassword(Long userId, ChangePasswordDto request);
+    void changePassword(String email, ChangePasswordDto request);
 
     User getUserByEmailId(String email);
 }

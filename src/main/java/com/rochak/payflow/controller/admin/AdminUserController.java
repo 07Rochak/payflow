@@ -1,14 +1,14 @@
 package com.rochak.payflow.controller.admin;
 
+import com.rochak.payflow.dto.request.CreateUserRequestDTO;
 import com.rochak.payflow.dto.response.UserResponseDTO;
 import com.rochak.payflow.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,6 +30,13 @@ public class AdminUserController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserResponseDTO> getUserById(@PathVariable Long id){
         return ResponseEntity.ok(userService.getUserById(id));
+    }
+
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody CreateUserRequestDTO userRequestDTO){
+        UserResponseDTO userResponseDTO = userService.createAdminUser(userRequestDTO);
+        return new ResponseEntity<>(userResponseDTO, HttpStatus.CREATED);
     }
 
 }
