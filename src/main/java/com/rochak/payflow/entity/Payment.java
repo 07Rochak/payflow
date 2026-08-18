@@ -1,5 +1,6 @@
 package com.rochak.payflow.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "Internal JPA persistence model for a PayFlow payment and its Razorpay identifiers/status.")
 public class Payment {
 
     @Id

@@ -36,6 +36,7 @@ public class SecurityDisableConfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/wallets/**", "/api/transactions/**", "/api/payments/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                        .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/v3/api-docs.yaml").permitAll()
                         .anyRequest()
                         .authenticated()
                 )

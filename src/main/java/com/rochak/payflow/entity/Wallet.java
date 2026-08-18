@@ -1,5 +1,6 @@
 package com.rochak.payflow.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "wallets")
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "Internal JPA persistence model for a user wallet. This is a developer-reference model, not the public wallet response contract.")
 public class Wallet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

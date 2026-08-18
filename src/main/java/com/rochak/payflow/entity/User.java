@@ -1,5 +1,6 @@
 package com.rochak.payflow.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
+@Schema(description = "Internal JPA persistence model for a PayFlow user. This is a developer-reference model, not the public user response contract.")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

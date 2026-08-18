@@ -1,5 +1,6 @@
 package com.rochak.payflow.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Getter
 @Builder
+@Schema(description = "Internal scheduled-job report containing Redis/session security findings. Not exposed by a REST endpoint.")
 public class SessionSecurityReport {
 
     private Instant generatedAt;

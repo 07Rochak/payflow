@@ -1,6 +1,7 @@
 package com.rochak.payflow.entity;
 
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Schema(description = "Internal JPA persistence model for a wallet transaction.")
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
