@@ -6,14 +6,32 @@ import lombok.Data;
 
 @Data
 @Builder
-@Schema(description = "Internal Razorpay order request. Amount is represented in paise.")
-public class RazorpayOrderRequest {
-    @Schema(description = "Amount in paise", example = "10000")
+@Schema(
+        name = "RazorpayOrderRequest",
+        description = """
+                Internal request model used by PayFlow when creating a Razorpay order.
+
+                This model represents the provider-facing request and is not a public PayFlow
+                client request.
+                """
+)public class RazorpayOrderRequest {
+    @Schema(
+            description = "Order amount in the smallest currency unit. For INR this is paise.",
+            example = "50000",
+            minimum = "1"
+    )
     private Integer amount;
 
-    @Schema(description = "Currently INR is used with razorpay interface")
+    @Schema(
+            description = "Currency used for the Razorpay order.",
+            example = "INR",
+            defaultValue = "INR"
+    )
     private String currency;
 
-    @Schema(description = "Unique recept id for identification of order", example = "PAY_123456...")
+    @Schema(
+            description = "Unique PayFlow receipt identifier used to correlate the Razorpay order.",
+            example = "PAY_20260819_000012"
+    )
     private String receipt;
 }
