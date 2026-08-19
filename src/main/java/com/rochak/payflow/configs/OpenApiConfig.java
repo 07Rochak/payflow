@@ -1,5 +1,7 @@
 package com.rochak.payflow.configs;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.rochak.payflow.dto.ChangePasswordDto;
 import com.rochak.payflow.dto.SessionAuditReport;
 import com.rochak.payflow.dto.SessionSecurityReport;
@@ -16,7 +18,7 @@ import com.rochak.payflow.dto.response.WalletResponseDTO;
 import com.rochak.payflow.entity.*;
 import io.swagger.v3.core.converter.AnnotatedType;
 import io.swagger.v3.core.converter.ModelConverters;
-import io.swagger.v3.core.converter.ResolvedSchema;
+import io.swagger.v3.core.jackson.ModelResolver;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.info.Contact;
@@ -75,6 +77,23 @@ import java.util.Map;
 )
 public class OpenApiConfig {
 
+//        static {
+//                com.fasterxml.jackson.datatype.jsr310.JavaTimeModule javaTimeModule =
+//                        new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule();
+//
+//                io.swagger.v3.core.util.Json.mapper().registerModule(javaTimeModule);
+//                io.swagger.v3.core.util.Yaml.mapper().registerModule(javaTimeModule);
+//                io.swagger.v3.core.util.Json31.mapper().registerModule(javaTimeModule);
+//                io.swagger.v3.core.util.Yaml31.mapper().registerModule(javaTimeModule);
+//        }
+//
+//        @Bean
+//        public ModelResolver modelResolver() {
+//                ObjectMapper mapper = new ObjectMapper();
+//                mapper.registerModule(new JavaTimeModule());
+//                return new ModelResolver(mapper);
+//        }
+
         @Bean
         public OpenAPI payflowOpenAPI() {
                 OpenAPI openAPI = new OpenAPI()
@@ -92,31 +111,102 @@ public class OpenApiConfig {
                         ));
 
                 // Add public API DTOs and internal developer-reference models to the Models section.
-                List<Class<?>> modelTypes = List.of(
-                        AuthResponseDTO.class, LoginRequestDTO.class,
-                        CreateUserRequestDTO.class, UserRequestDTO.class, ChangePasswordDto.class,
-                        LogoutRequestDto.class, RefreshTokenRequestDto.class,
-                        CreatePaymentRequestDTO.class, CreatePaymentResponseDTO.class, PaymentVerificationRequestDTO.class,
-                        TransferRequestDTO.class, WithdrawRequestDto.class, AddMoneyRequestDTO.class,
-                        UserResponseDTO.class, WalletResponseDTO.class, TransactionResponseDTO.class,
-                        RazorpayOrderRequest.class, RazorpayOrderResponse.class,
-                        SessionAuditReport.class, SessionSecurityReport.class,
-                        User.class, Wallet.class, Payment.class, Transaction.class, RefreshToken.class,
-                        Role.class, PaymentStatus.class, PaymentFailureReason.class,
-                        TransactionStatus.class, TransactionType.class, TransactionCategory.class
+//                List<Class<?>> modelTypes = List.of(
+//                        AuthResponseDTO.class, LoginRequestDTO.class,
+//                        CreateUserRequestDTO.class, UserRequestDTO.class, ChangePasswordDto.class,
+//                        LogoutRequestDto.class, RefreshTokenRequestDto.class,
+//                        CreatePaymentRequestDTO.class, CreatePaymentResponseDTO.class, PaymentVerificationRequestDTO.class,
+//                        TransferRequestDTO.class, WithdrawRequestDto.class, AddMoneyRequestDTO.class,
+//                        UserResponseDTO.class, WalletResponseDTO.class, TransactionResponseDTO.class,
+//                        RazorpayOrderRequest.class, RazorpayOrderResponse.class,
+//                        SessionAuditReport.class, SessionSecurityReport.class,
+//                        User.class, Wallet.class, Payment.class, Transaction.class, RefreshToken.class,
+//                        Role.class, PaymentStatus.class, PaymentFailureReason.class,
+//                        TransactionStatus.class, TransactionType.class, TransactionCategory.class
+//                );
+
+                List<Class<?>> dtoModels = List.of(
+                        AuthResponseDTO.class,
+                        LoginRequestDTO.class,
+                        CreateUserRequestDTO.class,
+                        UserRequestDTO.class,
+                        ChangePasswordDto.class,
+                        LogoutRequestDto.class,
+                        RefreshTokenRequestDto.class,
+
+                        CreatePaymentRequestDTO.class,
+                        CreatePaymentResponseDTO.class,
+                        PaymentVerificationRequestDTO.class,
+
+                        TransferRequestDTO.class,
+                        WithdrawRequestDto.class,
+
+                        UserResponseDTO.class,
+                        WalletResponseDTO.class,
+                        TransactionResponseDTO.class
                 );
 
-                for (Class<?> modelType : modelTypes) {
-                        ResolvedSchema resolved = ModelConverters.getInstance()
-                                .resolveAsResolvedSchema(new AnnotatedType(modelType).resolveAsRef(true));
+                List<Class<?>> providerModels = List.of(
+                        RazorpayOrderRequest.class,
+                        RazorpayOrderResponse.class
+                );
 
-                        if (resolved.referencedSchemas != null) {
-                                for (Map.Entry<String, Schema> entry : resolved.referencedSchemas.entrySet()) {
-                                        openAPI.getComponents().addSchemas(entry.getKey(), entry.getValue());
-                                }
-                        }
-                }
+                List<Class<?>> entityModels = List.of(
+                        User.class,
+                        Wallet.class,
+                        Payment.class,
+                        Transaction.class,
+                        RefreshToken.class
+                );
+
+                List<Class<?>> reportModels = List.of(
+                        SessionAuditReport.class,
+                        SessionSecurityReport.class
+                );
+
+                List<Class<?>> enumModels = List.of(
+                        Role.class,
+                        PaymentStatus.class,
+                        PaymentFailureReason.class,
+                        TransactionStatus.class,
+                        TransactionType.class,
+                        TransactionCategory.class
+                );
+
+//                List<Class<?>> modelTypes = new ArrayList<>();
+//
+//                modelTypes.addAll(dtoModels);
+//                modelTypes.addAll(providerModels);
+//                modelTypes.addAll(entityModels);
+//                modelTypes.addAll(reportModels);
+//                modelTypes.addAll(enumModels);
+
+                registerSchemas(openAPI, dtoModels);
+                registerSchemas(openAPI, providerModels);
+                registerSchemas(openAPI, entityModels);
+                registerSchemas(openAPI, reportModels);
+                registerSchemas(openAPI, enumModels);
 
                 return openAPI;
+        }
+
+        private void registerSchemas(
+                OpenAPI openAPI,
+                List<Class<?>> modelTypes
+        ) {
+                Components components = openAPI.getComponents();
+
+                for (Class<?> modelType : modelTypes) {
+                        try {
+                                Map<String, Schema> schemas = ModelConverters.getInstance()
+                                        .readAll(new AnnotatedType(modelType).resolveAsRef(false));
+                                if (schemas.isEmpty()) {
+                                        System.out.println("EMPTY schema for: " + modelType.getSimpleName());
+                                }
+                                schemas.forEach(components::addSchemas);
+                        } catch (Exception e) {
+                                System.out.println("FAILED for " + modelType.getSimpleName() + ": " + e);
+                        }
+                }
         }
 }
