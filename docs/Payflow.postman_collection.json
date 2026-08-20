@@ -1,0 +1,789 @@
+{
+  "info": {
+    "_postman_id": "6787dc1c-92f2-4e95-b6c5-d37bcef934cf",
+    "name": "Payflow",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "42331532"
+  },
+  "item": [
+    {
+      "name": "create user",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Test User\",\r\n    \"email\": \"testuser@payflow.com\",\r\n    \"password\": \"Test@12345\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/users",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get user",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/users/3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "users",
+            "3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get wallet",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzg2OTk4NzE5LCJleHAiOjE3ODcwODUxMTl9.yhwPagRTqATqms668SG5qa6PMbsiwifXnoVPE1F5cXTaFwsehMN8zgIpWuaMSuQbZF-VWKcFpDUaIlpSqPqtPw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/wallets/me",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "wallets",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "add-money",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzg0MTQ1NTczLCJleHAiOjE3ODQyMzE5NzN9.v8h_bnSH4DNRnOGBy1r4QO-hBj5hMGfJ4iIo89lNrGR7ie2mOapj_dgNoGaEMWkulfEV9sJBEZ5hD-NzoZc-Lw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"amount\": \"50000\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/wallets/2/add-money",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "wallets",
+            "2",
+            "add-money"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Transfer money",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzg2OTk4NzE5LCJleHAiOjE3ODcwODUxMTl9.yhwPagRTqATqms668SG5qa6PMbsiwifXnoVPE1F5cXTaFwsehMN8zgIpWuaMSuQbZF-VWKcFpDUaIlpSqPqtPw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"toUserId\": \"1\",\r\n    \"amount\": \"10\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/wallets/transfer",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "wallets",
+            "transfer"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Transaction ledger",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzg2OTk4NzE5LCJleHAiOjE3ODcwODUxMTl9.yhwPagRTqATqms668SG5qa6PMbsiwifXnoVPE1F5cXTaFwsehMN8zgIpWuaMSuQbZF-VWKcFpDUaIlpSqPqtPw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/transactions/user/me",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "transactions",
+            "user",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"newtestuser@payflow.com\",\r\n    \"password\": \"Test@54321\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/auth/login",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "auth",
+            "login"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ADMIN - See all users",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzg2OTk4NzE5LCJleHAiOjE3ODcwODUxMTl9.yhwPagRTqATqms668SG5qa6PMbsiwifXnoVPE1F5cXTaFwsehMN8zgIpWuaMSuQbZF-VWKcFpDUaIlpSqPqtPw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/admin/users",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "admin",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ADMIN - see specific user",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzg2OTk4NzE5LCJleHAiOjE3ODcwODUxMTl9.yhwPagRTqATqms668SG5qa6PMbsiwifXnoVPE1F5cXTaFwsehMN8zgIpWuaMSuQbZF-VWKcFpDUaIlpSqPqtPw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/admin/users/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "admin",
+            "users",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ADMIN - Get Wallet",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzg2OTk4NzE5LCJleHAiOjE3ODcwODUxMTl9.yhwPagRTqATqms668SG5qa6PMbsiwifXnoVPE1F5cXTaFwsehMN8zgIpWuaMSuQbZF-VWKcFpDUaIlpSqPqtPw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/admin/wallets/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "admin",
+            "wallets",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ADMIN - specific user transactions",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzg2OTk4NzE5LCJleHAiOjE3ODcwODUxMTl9.yhwPagRTqATqms668SG5qa6PMbsiwifXnoVPE1F5cXTaFwsehMN8zgIpWuaMSuQbZF-VWKcFpDUaIlpSqPqtPw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/admin/transactions/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "admin",
+            "transactions",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ADMIN - all transactions",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzg2OTk4NzE5LCJleHAiOjE3ODcwODUxMTl9.yhwPagRTqATqms668SG5qa6PMbsiwifXnoVPE1F5cXTaFwsehMN8zgIpWuaMSuQbZF-VWKcFpDUaIlpSqPqtPw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/admin/transactions",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "admin",
+            "transactions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "payments",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzg2OTk4NzE5LCJleHAiOjE3ODcwODUxMTl9.yhwPagRTqATqms668SG5qa6PMbsiwifXnoVPE1F5cXTaFwsehMN8zgIpWuaMSuQbZF-VWKcFpDUaIlpSqPqtPw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"amount\": 100\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/payments/create-order",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "payments",
+            "create-order"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "payment verification",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJyb2NoYWtzaHJpdmFzdGF2MDJAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzgxNTQ3NTE4LCJleHAiOjE3ODE2MzM5MTh9.Fss45Pzk4UQ2JPj3AxFbziW9Okm5DEv_raSH6D7Dn3z4ELt_ZBUggOMg4c8JN2lKi8lm6LqhYXx9QKMQ_ke_Qw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"razorpayOrderId\": \"order_T20H6XHSd7aFaZ\",\r\n  \"razorpayPaymentId\": \"pay_test\",\r\n  \"razorpaySignature\": \"fake_signature\",\r\n  \"amount\": 500\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/payments/verify",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "payments",
+            "verify"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "refresh auth token",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"refreshToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlckBwYXlmbG93LmNvbSIsImp0aSI6ImU4M2E2ZTMzLTIxMmMtNGY2Mi1hZTg0LTFhYjIyMGIxYmJlNCIsInNpZCI6ImY4Yjk2YjdlLWFhNDQtNGZiMi1iNzA1LWFlN2VmOTFhMDIyYyIsImlhdCI6MTc4NzAwMjQwMSwiZXhwIjoxNzg3NjA3MjAxfQ.azL8OOvbbQGz1hWX5yJvksbWV6oZjStgnp8gSHhcFWvbpg17pDPvt81aFsovy4p8VYbXfK7mYyuBHIrxq571qA\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/auth/refresh",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "auth",
+            "refresh"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "logout",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"refreshToken\": \"eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwianRpIjoiZjg4ZTExNzYtMTMxZS00OGNiLWIzNjgtOTE0YzkxODgyOGZiIiwic2lkIjoiZDgyYzY1YWEtZWNkMC00NjIwLTgzYTItMGJkNDgwYmZhOGZiIiwiaWF0IjoxNzg0ODMxMTQ2LCJleHAiOjE3ODU0MzU5NDZ9.RVqU1LcZoSTDM4iHwdFIeEXiDiFCNpndSBaH3AHqeY3WQEBPTlCaIczXsZYiK-6N61jYpMw20kFVSK2CjczcQg\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/auth/logout",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "auth",
+            "logout"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Withdraw money",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzgzNzA1NzI5LCJleHAiOjE3ODM3OTIxMjl9.47DvsV4Gv6zicJ1GCRy98eNQG-oOHJKifEbEOgFny-U1L6Y05aTkCdFDwJuy589ppzlO69zoMSfE0V0p01wZHg",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"amount\": 10\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/wallets/withdraw",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "wallets",
+            "withdraw"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ADMIN - Freeze wallet",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzg2OTk4NzE5LCJleHAiOjE3ODcwODUxMTl9.yhwPagRTqATqms668SG5qa6PMbsiwifXnoVPE1F5cXTaFwsehMN8zgIpWuaMSuQbZF-VWKcFpDUaIlpSqPqtPw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/admin/wallets/2/freeze",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "admin",
+            "wallets",
+            "2",
+            "freeze"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "ADMIN-unfreeze wallet",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJlbGxpZXdpbGxhbXNAZ21haWwuY29tIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzg2OTk4NzE5LCJleHAiOjE3ODcwODUxMTl9.yhwPagRTqATqms668SG5qa6PMbsiwifXnoVPE1F5cXTaFwsehMN8zgIpWuaMSuQbZF-VWKcFpDUaIlpSqPqtPw",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/admin/wallets/2/unFreeze",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "admin",
+            "wallets",
+            "2",
+            "unFreeze"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "update user",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0dXNlckBwYXlmbG93LmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzg3MDAyNDAxLCJleHAiOjE3ODcwODg4MDF9.tkL-aMqU8saARtmGoqHEW5_8_hMEfgFq9oFQojHh4wiiKdh6zyznZ8KLVR1tAmPmSwAp5by3Fq76NTSLi1do1Q",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Updated Test User\",\r\n  \"email\": \"newtestuser@payflow.com\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/users/me",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "users",
+            "me"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "change password",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuZXd0ZXN0dXNlckBwYXlmbG93LmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzg3MDAyODE4LCJleHAiOjE3ODcwODkyMTh9.pDqBn12u-AB1IuA4DZFoLXxfDFRed1jz-qa3zQe8MxQvjlmizVGbgmUE8qC6o49IAtFBWDTQUYHQHQsLjcTSlg",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"oldPassword\": \"Test@12345\",\r\n  \"newPassword\": \"Test@54321\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/users/change-password",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "users",
+            "change-password"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Actuator health metric",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/actuator/health",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "actuator",
+            "health"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Actuator info metric",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/actuator/info",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "actuator",
+            "info"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Actuator App Metric",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJuZXd0ZXN0dXNlckBwYXlmbG93LmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzg3MDc3ODc2LCJleHAiOjE3ODcxNjQyNzZ9.calQ70YtMTJw4uIhS1CUssUssG4HrnBPdJpUEwFRZOz0w3qXU7eFI0f-15lv-35nmewNu5QEIezfChTp773zDA",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/actuator/metrics/jvm.memory.used",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "actuator",
+            "metrics",
+            "jvm.memory.used"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
