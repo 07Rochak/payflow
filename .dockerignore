@@ -1,0 +1,26 @@
+# Git
+.git
+.gitignore
+
+# IDE / editor metadata
+.idea
+.vscode
+*.iml
+*.iws
+*.ipr
+
+# Maven build output
+target
+.mvn/timing.properties
+
+# Local runtime logs
+# Logs are generated at runtime and mounted from the host by Compose.
+logs
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.temp
