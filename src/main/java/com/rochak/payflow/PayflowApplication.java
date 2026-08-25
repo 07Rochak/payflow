@@ -6,12 +6,16 @@ import com.rochak.payflow.repository.UserRepository;
 import com.rochak.payflow.repository.UserSessionRepository;
 import com.rochak.payflow.session.SessionProperties;
 import com.rochak.payflow.session.UserSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -20,12 +24,40 @@ import java.util.UUID;
 @EnableConfigurationProperties(
 		WalletLimitConfig.class
 )
+//@Slf4j
 @EnableScheduling
 public class PayflowApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PayflowApplication.class, args);
+//		SpringApplication app = SpringApplication.run(PayflowApplication.class, args);
+		SpringApplication app = new SpringApplication(PayflowApplication.class);
+		app.setApplicationStartup(
+				new BufferingApplicationStartup(2048)
+		);
+
+		app.run(args);
 	}
+
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
+	}
+
+
+//	@Bean
+//	CommandLineRunner redisWarmup(StringRedisTemplate redisTemplate) {
+//		return args -> {
+//			long start = System.nanoTime();
+//
+//			redisTemplate.opsForValue()
+//					.set("payflow:startup:warmup", "ok");
+//
+//			long duration =
+//					(System.nanoTime() - start) / 1_000_000;
+//
+//			log.info("Redis warmup completed in {} ms", duration);
+//		};
+//	}
 
 //	@Bean
 //	CommandLineRunner run(UserRepository repo) {

@@ -57,7 +57,7 @@ public class SessionServiceImpl implements SessionService {
     public Optional<UserSession> getRequiredSession(String sessionId) {
         UserSession session = userSessionRepository.findById(sessionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Session not found"));
-        return userSessionRepository.findById(sessionId);
+        return Optional.of(session);
     }
 
     @Override
