@@ -34,3 +34,5 @@ build/
 
 ### VS Code ###
 .vscode/
+/redis-migration.rdb
+/postgres-migration.sql

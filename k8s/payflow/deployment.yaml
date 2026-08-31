@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payflow
+  namespace: payflow
+  labels:
+    app: payflow
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: payflow
+
+  template:
+    metadata:
+      labels:
+        app: payflow
+
+    spec:
+      containers:
+        - name: payflow
+          image: payflow:local
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+
+          env:
+            # PostgreSQL
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres:5432/mydb
+
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: payflow-secret
+                  key: POSTGRES_USER
+
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: payflow-secret
+                  key: POSTGRES_PASSWORD
+
+            # Redis
+            - name: SPRING_DATA_REDIS_HOST
+              value: redis
+
+            - name: SPRING_DATA_REDIS_PORT
+              value: "6379"
+
+            # JWT
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: payflow-secret
+                  key: JWT_SECRET
+
+            # Razorpay
+            - name: RAZORPAY_KEY_ID
+              valueFrom:
+                secretKeyRef:
+                  name: payflow-secret
+                  key: RAZORPAY_KEY_ID
+
+            - name: RAZORPAY_KEY_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: payflow-secret
+                  key: RAZORPAY_KEY_SECRET
+
+            # Timezone
+            - name: TZ
+              valueFrom:
+                configMapKeyRef:
+                  name: payflow-config
+                  key: TZ
+
+          volumeMounts:
+            - name: application-logs
+              mountPath: /app/logs
+
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 45
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          resources:
+            requests:
+              cpu: 200m
+              memory: 512Mi
+
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+
+      volumes:
+        - name: application-logs
+          persistentVolumeClaim:
+            claimName: payflow-logs-pvc
