@@ -18,6 +18,9 @@ spec:
         app: payflow
 
     spec:
+      serviceAccountName: payflow
+      automountServiceAccountToken: false
+
       containers:
         - name: payflow
           image: payflow:local
