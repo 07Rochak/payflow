@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: payflow-pdb
+  namespace: payflow
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: payflow
