@@ -54,7 +54,7 @@ class SessionServiceImplTest {
         UserSession s=UserSession.builder().sessionId("s1").build();
         when(repository.findById("s1")).thenReturn(Optional.of(s));
         assertSame(s,service.getRequiredSession("s1").orElseThrow());
-        verify(repository,times(2)).findById("s1");
+        verify(repository).findById("s1");
     }
 
     @Test void deleteSession_shouldDeleteAndRemoveIndex(){
