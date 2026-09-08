@@ -93,7 +93,7 @@
 </div>
 
 <script>
-    const API_BASE = "http://localhost:8080";
+    const API_BASE = window.location.protocol === "file:" ? "http://localhost:8080" : window.location.origin;
     const keyId = "rzp_test_SuUQMBpgsib54Y";
 
     let accessToken = null;

@@ -1,16 +1,37 @@
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: payflow
   namespace: payflow
   labels:
     app: payflow
+
 spec:
-  replicas: 2
+  # Baseline replica count.
+  # HPA can scale this between 2 and 5.
+  replicas: 3
+
+  # A new pod must remain Ready for this duration
+  # before Kubernetes considers it Available.
+  minReadySeconds: 10
+
+  # Fail the rollout if it cannot make progress within 5 minutes.
+  progressDeadlineSeconds: 300
+
+  # Keep the five most recent ReplicaSets for rollback/history.
+  revisionHistoryLimit: 5
 
   selector:
     matchLabels:
       app: payflow
+
+  # Zero-downtime rolling deployment.
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
 
   template:
     metadata:
@@ -20,6 +41,29 @@ spec:
     spec:
       serviceAccountName: payflow
       automountServiceAccountToken: false
+
+      # Give Spring Boot time to finish graceful shutdown.
+      terminationGracePeriodSeconds: 30
+
+      initContainers:
+        - name: wait-for-postgres
+          image: postgres:15
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - |
+              until pg_isready -h postgres -p 5432 -U myuser -d mydb; do
+                echo "Waiting for PostgreSQL..."
+                sleep 2
+              done
+              echo "PostgreSQL is ready."
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: payflow-secret
+                  key: POSTGRES_USER
 
       containers:
         - name: payflow
@@ -86,24 +130,61 @@ spec:
             - name: application-logs
               mountPath: /app/logs
 
-          readinessProbe:
+          # ---------------------------------------------------------
+          # STARTUP PROBE
+          # ---------------------------------------------------------
+          # Prevents normal Spring Boot startup time from being
+          # interpreted as a readiness failure.
+          #
+          # Maximum startup window:
+          # 24 failures × 5 seconds = 120 seconds
+          # ---------------------------------------------------------
+          startupProbe:
             httpGet:
               path: /actuator/health
               port: 8080
-            initialDelaySeconds: 20
+              scheme: HTTP
+            initialDelaySeconds: 35
+            periodSeconds: 5
+            timeoutSeconds: 5
+            failureThreshold: 24
+            successThreshold: 1
+
+          # ---------------------------------------------------------
+          # READINESS PROBE
+          # ---------------------------------------------------------
+          # Controls whether the pod receives Service traffic.
+          # This only starts being evaluated after startupProbe succeeds.
+          # ---------------------------------------------------------
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+              scheme: HTTP
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 6
+            successThreshold: 1
 
+          # ---------------------------------------------------------
+          # LIVENESS PROBE
+          # ---------------------------------------------------------
+          # Detects an application that has become unhealthy after
+          # successful startup and allows Kubernetes to restart it.
+          # ---------------------------------------------------------
           livenessProbe:
             httpGet:
-              path: /actuator/health
+              path: /actuator/health/liveness
               port: 8080
-            initialDelaySeconds: 45
+              scheme: HTTP
             periodSeconds: 15
             timeoutSeconds: 5
             failureThreshold: 3
+            successThreshold: 1
 
+          # ---------------------------------------------------------
+          # RESOURCE MANAGEMENT
+          # ---------------------------------------------------------
           resources:
             requests:
               cpu: 200m

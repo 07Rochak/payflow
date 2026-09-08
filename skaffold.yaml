@@ -1,0 +1,38 @@
+apiVersion: skaffold/v4beta13
+kind: Config
+
+metadata:
+  name: payflow
+
+build:
+  artifacts:
+    - image: payflow
+      docker:
+        dockerfile: Dockerfile
+
+      hooks:
+        before:
+          - command:
+              - cmd.exe
+              - /C
+              - mvnw.cmd
+              - test
+            os:
+              - windows
+
+  local:
+    push: false
+
+manifests:
+  rawYaml:
+    - k8s/namespace.yaml
+    - k8s/config/*.yaml
+    - k8s/payflow/*.yaml
+    - k8s/postgres/*.yaml
+    - k8s/redis/deployment.yaml
+    - k8s/redis/pvc.yaml
+    - k8s/redis/service.yaml
+    - k8s/gateway/*.yaml
+
+deploy:
+  kubectl: {}
