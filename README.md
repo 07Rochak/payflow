@@ -1,6 +1,6 @@
 # PayFlow — Payment Orchestration API
 
-> **Production-oriented Spring Boot payment orchestration backend** for authentication, Redis-backed session management, wallets, transactions, and Razorpay payment processing.
+> **Production-oriented Spring Boot payment orchestration backend** for authentication, Redis-backed session management, wallets, transactions, and Razorpay payment processing. It is also a cloud-native payment application built with Spring Boot and designed to demonstrate containerization, observability, and Kubernetes deployment practices.
 
 [![Java](https://img.shields.io/badge/Java-21-orange)](#technology-stack)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.5-brightgreen)](#technology-stack)
@@ -19,15 +19,25 @@
 - [Key Features](#key-features)
 - [Technology Stack](#technology-stack)
 - [Architecture](#architecture)
+  - [Docker Compose Architecture](#docker-compose-architecture)
+  - [Kubernetes Architecture](#kubernetes-architecture)
   - [Architecture Layers](#architecture-layers)
   - [Domain Model](#domain-model)
+  - [Kubernetes Architecture](#kubernetes-architecture)
 - [Project Structure](#project-structure)
 - [Quick Start](#quick-start)
   - [Option 1 — Standalone Application](#option-1--standalone-application)
   - [Option 2 — Complete Docker Compose Setup](#option-2--complete-docker-compose-setup)
+  - [Option 3 — Kubernetes Deployment with Skaffold](#option-3--kubernetes-deployment-with-skaffold)
 - [Prerequisites](#prerequisites)
   - [Standalone Run](#standalone-run)
   - [Complete Docker Run](#complete-docker-run)
+  - [Kubernetes Prerequisites](#kubernetes-prerequisites)
+- [Deployment & Kubernetes](#deployment--kubernetes)
+  - [Deployment Overview](#deployment-overview)
+  - [Kubernetes Overview](#kubernetes-overview)
+  - [Kubernetes Commands](#kubernetes-commands)
+  - [Kubernetes Validation Status](#kubernetes-validation-status)
 - [Configuration & Secrets](#configuration--secrets)
 - [Application Access](#application-access)
 - [Initial Admin Setup](#initial-admin-setup)
@@ -83,15 +93,16 @@
 
 ## 🔗 Project Links
 
-| Resource | Link |
-|---|---|
-| Source Repository | [GitHub](https://github.com/07Rochak/payflow) |
-| Architecture Diagram | [`docs/payflow-architecture.png`](https://github.com/07Rochak/payflow/blob/main/docs/architecture_diagram.png) |
-| Payment Happy Flow | [`docs/happyflow.gif`](https://github.com/07Rochak/payflow/blob/main/docs/happyflow.gif) |
-| Postman Collection | [`docs/payflow-postman-collection.json`](https://github.com/07Rochak/payflow/blob/main/docs/Payflow.postman_collection) |
-| Docker Compose | [`docker-compose.yml`](https://github.com/07Rochak/payflow/blob/main/docker-compose.yml) |
-| Swagger UI | [localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html) |
-| OpenAPI JSON | [localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs) |
+| Resource                               | Link                                                                                                                      |
+|----------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| Source Repository                      | [GitHub](https://github.com/07Rochak/payflow)                                                                             |
+| Docker Compose Architecture Diagram    | [`docs/payflow-architecture.png`](https://github.com/07Rochak/payflow/blob/main/docs/architecture_diagram.png)            |
+| Kubernetes Docker Architecture Diagram | [`docs/payflow-architecture.png`](https://github.com/07Rochak/payflow/blob/main/docs/architecture_kubernetes_diagram.png) |
+| Payment Happy Flow                     | [`docs/happyflow.gif`](https://github.com/07Rochak/payflow/blob/main/docs/happyflow.gif)                                  |
+| Postman Collection                     | [`docs/payflow-postman-collection.json`](https://github.com/07Rochak/payflow/blob/main/docs/Payflow.postman_collection)   |
+| Docker Compose                         | [`docker-compose.yml`](https://github.com/07Rochak/payflow/blob/main/docker-compose.yml)                                  |
+| Swagger UI                             | [localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)                                                   |
+| OpenAPI JSON                           | [localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)                                                           |
 
 
 ---
@@ -257,6 +268,24 @@ PayFlow then verifies the returned payment signature and updates its own domain 
 - Metrics
 - Scheduled session reports
 
+## Containerization & Kubernetes
+- Docker-based application containerization
+- Docker Compose-based local multi-container setup
+- Kubernetes deployment for PayFlow
+- Kubernetes Deployments for PayFlow, PostgreSQL and Redis
+- Kubernetes Services for internal application communication
+- ConfigMap-based application configuration
+- Secret-based sensitive configuration
+- PersistentVolumeClaims for persistent application storage
+- Kubernetes readiness and liveness probes
+- Kubernetes pod self-healing
+- Rolling updates through Kubernetes Deployments
+- Horizontal Pod Autoscaler configuration
+- Pod Disruption Budget configuration
+- Gateway API and HTTPRoute configuration
+- Skaffold-based Kubernetes build and deployment workflow
+- Maven test gate before container deployment through Skaffold
+
 ---
 
 # Technology Stack
@@ -278,18 +307,57 @@ PayFlow then verifies the returned payment signature and updates its own domain 
 | API documentation | Springdoc OpenAPI 3.0.3 | Swagger/OpenAPI |
 | Monitoring | Spring Boot Actuator | Health, info and metrics |
 | Build | Maven | Build and dependency management |
-| Containerization | Docker | PostgreSQL/Redis and planned application runtime |
-| Testing | JUnit / Spring Boot Test / Rest Assured / Testcontainers | Automated testing |
+| Containerization | Docker | Application and dependency containerization |
+| Local orchestration | Docker Compose | Local multi-container development environment |
+| Container orchestration | Kubernetes | Deployment and runtime orchestration |
+| Kubernetes packaging/workflow | Skaffold | Build, tag, test and deploy workflow |
+| Kubernetes networking | Gateway API / HTTPRoute | HTTP routing to the PayFlow application |
+| Kubernetes gateway implementation | Envoy Gateway | Gateway implementation for local Kubernetes routing |
+| Kubernetes scaling | Horizontal Pod Autoscaler | CPU and memory-based replica scaling configuration |
+| Kubernetes availability | Pod Disruption Budget | Availability protection during voluntary disruptions |
+| Kubernetes storage | PersistentVolumeClaims | Persistent storage for application components |
 
 ---
 
 # Architecture
+
+PayFlow has two deployment environments:
+
+1. Docker Compose-based local environment
+2. Kubernetes-based container orchestration environment
+
+## Docker Compose Architecture
 
 ![PayFlow Architecture](./docs/architecture_diagram.png)
 
 The architecture diagram is the primary visual reference for PayFlow. It shows the application boundary, API layer, security, business services, repositories, PostgreSQL, Redis, Razorpay, scheduled jobs, cross-cutting concerns, Docker Compose runtime, request/response directions, and the compact domain model.
 
 The diagram intentionally avoids listing every Java class. The sections below explain the responsibilities represented in the diagram.
+## Kubernetes Architecture
+
+![PayFlow Kubernetes Architecture](./docs/architecture_kubernetes_diagram.png)
+
+PayFlow can also run on a local Kubernetes cluster using Kubernetes Deployments, Services, ConfigMaps, Secrets, PersistentVolumeClaims, readiness and liveness probes, and Skaffold-based deployment automation.
+
+The Kubernetes architecture diagram is maintained separately from the Horizontal Pod Autoscaler behavior diagram. The HPA diagram can be added later as a separate scaling-focused diagram.
+The main components are:
+
+- **PayFlow Deployment:** Runs the Spring Boot application pods.
+- **PayFlow Service:** Provides stable internal access to the PayFlow pods.
+- **PostgreSQL Deployment:** Runs the PostgreSQL database container.
+- **PostgreSQL Service:** Provides internal access to PostgreSQL.
+- **PostgreSQL PersistentVolumeClaim:** Provides persistent storage for PostgreSQL data.
+- **Redis Deployment:** Runs the Redis container.
+- **Redis Service:** Provides internal access to Redis.
+- **Redis PersistentVolumeClaim:** Provides persistent storage for Redis data.
+- **PayFlow logs PersistentVolumeClaim:** Provides persistent storage for application logs where configured.
+- **ConfigMap:** Stores non-sensitive application configuration.
+- **Secret:** Stores sensitive configuration such as credentials or secret values.
+- **Horizontal Pod Autoscaler:** Defines the scaling range and resource utilization targets for PayFlow.
+- **Pod Disruption Budget:** Limits voluntary disruption of PayFlow pods.
+- **Gateway:** Defines the Kubernetes Gateway API entry point.
+- **HTTPRoute:** Defines HTTP routing from the Gateway to the PayFlow Service.
+- **ServiceAccount:** Provides the identity used by the relevant Kubernetes workload.
 
 ## Architecture Layers
 
@@ -448,6 +516,65 @@ The application also includes:
 - Actuator
 - logging
 
+### 10. Container Layer
+
+Docker packages the application and its dependencies into container images.
+
+The project uses container images for:
+
+- PayFlow
+- PostgreSQL
+- Redis
+
+Docker Compose is used to run the application and dependencies together in a local development environment.
+
+### 11. Kubernetes Workload Layer
+
+Kubernetes manages the runtime workloads through resources such as:
+
+- Deployments
+- Pods
+- Services
+- ConfigMaps
+- Secrets
+- PersistentVolumeClaims
+
+The PayFlow application, PostgreSQL and Redis are deployed as separate Kubernetes workloads.
+
+### 12. Kubernetes Reliability Layer
+
+The reliability-related Kubernetes resources include:
+
+- Readiness probes
+- Liveness probes
+- Rolling updates
+- Pod replacement
+- Horizontal Pod Autoscaler
+- Pod Disruption Budget
+
+These resources provide the configuration needed for application availability, recovery and scaling.
+
+### 13. Kubernetes Networking Layer
+
+The networking layer contains:
+
+- Kubernetes Services for internal service discovery
+- Gateway API resources
+- Gateway
+- HTTPRoute
+- Envoy Gateway as the Gateway implementation
+
+### 14. Deployment Automation Layer
+
+Skaffold coordinates the Kubernetes development workflow:
+
+1. Run the configured test gate
+2. Build the application image
+3. Generate or apply the image tag
+4. Deploy Kubernetes manifests
+5. Wait for deployment stabilization
+6. Validate the deployed resources
+
 ---
 
 ## Domain Model
@@ -530,7 +657,6 @@ Important concepts include:
 - creation timestamp
 
 ---
-
 # Project Structure
 
 ```text
@@ -618,16 +744,17 @@ cd payflow
 ```
 
 ### 2. Start PostgreSQL
+PostgreSQL is provided as a Docker image published by the project.
 
-For the standalone setup, PostgreSQL is provided as a Docker image published by the project.
-
-> **Placeholder image URL:** `ghcr.io/07rochak/payflow-postgres:latest`  
-> Replace this with the final published image once the infrastructure setup is complete.
-
-Pull the image:
+Pull the image with latest tag:
 
 ```bash
 docker pull ghcr.io/07rochak/payflow-postgres:latest
+```
+
+or access on Docker Hub at:
+```bash
+https://hub.docker.com/repository/docker/07rochak/payflow-postgres/general
 ```
 
 Start the container using the **PostgreSQL Docker startup command provided in `application.properties`**.
@@ -642,19 +769,19 @@ The commented startup command in the repository is the source of truth for the r
 - port mapping
 - timezone configuration
 
-> The image URL and startup command are intentionally kept in the repository configuration so they can be updated without changing the README.
 
 ### 3. Start Redis
 
 Redis is also provided as a Docker image published by the project.
 
-> **Placeholder image URL:** `ghcr.io/07rochak/payflow-redis:latest`  
-> Replace this with the final published image once the infrastructure setup is complete.
-
 Pull the image:
 
 ```bash
 docker pull ghcr.io/07rochak/payflow-redis:latest
+```
+or access on Docker hub at:
+```bash
+https://hub.docker.com/repository/docker/07rochak/payflow-redis/general
 ```
 
 Start the container using the **Redis Docker startup command provided in `application.properties`**.
@@ -715,7 +842,18 @@ Docker Compose
 └── Redis :6379
 ```
 
-The current project ZIP does **not** contain the Compose configuration yet. The final repository will add the Compose setup and link it here.
+### Docker Hub
+
+#### PayFlow Application Image
+
+- Docker image: `07rochak/payflow:1.1.0`
+- Docker Hub repository: https://hub.docker.com/repository/docker/07rochak/payflow/general
+
+Pull the PayFlow application image:
+
+```bash
+docker pull 07rochak/payflow:1.1.0
+```
 
 ### Start the complete environment
 
@@ -743,7 +881,328 @@ docker compose down
 
 ### Docker Compose configuration
 
-> **Placeholder:** [Docker Compose configuration](https://github.com/07Rochak/payflow/blob/main/docker-compose.yml) — replace/update this link when the final Compose setup is committed.
+> [Docker Compose configuration](https://github.com/07Rochak/payflow/blob/main/docker-compose.yml)
+
+## Option 3 — Kubernetes Deployment with Skaffold
+
+PayFlow can also be deployed to a local Kubernetes cluster using Skaffold.
+
+The Kubernetes manifests are maintained under folder:
+
+```text
+k8s/
+```
+
+Detailed Kubernetes documentation is maintained under:
+
+```text
+docs/kubernetes/
+```
+
+Verify the tools:
+
+```bash
+docker version
+kubectl version --client
+kubectl config current-context
+skaffold version
+mvn -version
+```
+#### 1. Start Kubernetes
+
+Enable Kubernetes in Docker Desktop.
+
+```bash
+kubectl config current-context
+kubectl cluster-info
+kubectl get nodes
+```
+
+#### 2. Verify Required Tools
+
+```bash
+docker version
+kubectl version --client
+skaffold version
+mvn -version
+```
+
+Required tools:
+
+- Docker Desktop with Kubernetes enabled
+- `kubectl`
+- Skaffold
+- Java 21
+- Maven
+- A working Docker daemon
+- A Kubernetes context pointing to the intended local cluster
+
+#### 3. Inspect the Kubernetes Manifests
+
+PowerShell:
+
+```powershell
+Get-ChildItem .\k8s -Recurse -File
+```
+
+Apply the namespace manifest if required:
+
+```bash
+kubectl apply -f k8s/namespace.yaml
+```
+
+If the project uses a dedicated namespace:
+
+```bash
+kubectl config set-context --current --namespace=<namespace>
+```
+
+> Replace `<namespace>` with the exact namespace defined in the manifests.
+
+#### 4. Deploy with Skaffold
+
+```bash
+skaffold run
+```
+
+The intended workflow is:
+
+```text
+Maven test gate
+        ↓
+Docker image build
+        ↓
+Image tagging
+        ↓
+Kubernetes deployment
+        ↓
+Deployment rollout
+        ↓
+Validation
+```
+
+In PowerShell, inspect the process exit code with:
+
+```powershell
+$LASTEXITCODE
+```
+
+#### 5. Validate the Deployment
+
+```bash
+kubectl get pods
+kubectl get pods -o wide
+kubectl get pods -w
+kubectl get deployments
+kubectl get svc
+kubectl get pvc
+```
+
+Check rollout status:
+
+```bash
+kubectl rollout status deployment/<deployment-name>
+```
+
+Check logs:
+
+```bash
+kubectl logs <pod-name>
+kubectl logs -f <pod-name>
+kubectl logs deployment/<deployment-name>
+```
+
+For local access through a Service:
+
+```bash
+kubectl port-forward svc/<service-name> 8080:8080
+```
+
+For the complete Kubernetes workflow, see: [Kubernetes Overview](##Kubernetes Overview)
+
+### Kubernetes Overview
+
+| Resource | Purpose |
+|---|---|
+| PayFlow Deployment | Runs the PayFlow application pods |
+| PayFlow Service | Provides stable internal access to PayFlow |
+| PostgreSQL Deployment | Runs the PostgreSQL database |
+| PostgreSQL Service | Provides internal database access |
+| PostgreSQL PersistentVolumeClaim | Provides persistent PostgreSQL storage |
+| Redis Deployment | Runs the Redis session store |
+| Redis Service | Provides internal Redis access |
+| Redis PersistentVolumeClaim | Provides persistent Redis storage |
+| PayFlow logs PersistentVolumeClaim | Provides persistent application log storage where configured |
+| ConfigMap | Stores non-sensitive application configuration |
+| Secret | Stores sensitive configuration |
+| Horizontal Pod Autoscaler | Provides CPU and memory-based scaling configuration |
+| Pod Disruption Budget | Protects availability during voluntary disruptions |
+| Gateway | Provides a Gateway API entry point where configured |
+| HTTPRoute | Routes HTTP traffic to the PayFlow Service where configured |
+| ServiceAccount | Defines workload identity where configured |
+
+### Kubernetes Commands
+
+#### Cluster and Context
+
+```bash
+kubectl config current-context
+kubectl config get-contexts
+kubectl cluster-info
+kubectl get nodes
+```
+
+#### Pods
+
+```bash
+kubectl get pods
+kubectl get pods -o wide
+kubectl get pods -w
+kubectl describe pod <pod-name>
+```
+
+#### Deployments
+
+```bash
+kubectl get deployments
+kubectl describe deployment <deployment-name>
+kubectl rollout status deployment/<deployment-name>
+kubectl rollout history deployment/<deployment-name>
+```
+
+#### Services
+
+```bash
+kubectl get svc
+kubectl describe svc <service-name>
+```
+
+#### Storage
+
+```bash
+kubectl get pvc
+kubectl get pv
+kubectl describe pvc <pvc-name>
+```
+
+#### Configuration
+
+```bash
+kubectl get configmap
+kubectl get secrets
+kubectl describe configmap <configmap-name>
+kubectl describe secret <secret-name>
+```
+
+Do not print Secret values in documentation or screenshots.
+
+#### Scaling
+
+```bash
+kubectl get hpa
+kubectl describe hpa <hpa-name>
+kubectl top pods
+kubectl top nodes
+```
+
+`kubectl top` requires Metrics Server.
+
+#### Availability
+
+```bash
+kubectl get pdb
+kubectl describe pdb <pdb-name>
+```
+
+#### Gateway API
+
+Use these only if Gateway API resources are installed:
+
+```bash
+kubectl get gateway
+kubectl describe gateway <gateway-name>
+kubectl get httproute
+kubectl describe httproute <httproute-name>
+```
+
+#### Logs and Events
+
+```bash
+kubectl logs <pod-name>
+kubectl logs -f <pod-name>
+kubectl logs deployment/<deployment-name>
+kubectl get events --sort-by=.metadata.creationTimestamp
+```
+
+#### Local Access
+
+```bash
+kubectl port-forward svc/<service-name> 8080:8080
+```
+
+#### Cleanup
+
+```bash
+kubectl delete -f k8s/
+```
+
+> Use cleanup carefully because deleting resources may affect application state.
+
+### Kubernetes Validation Status
+
+Document validation according to what has actually been verified.
+
+| Area | Status | Notes |
+|---|---|---|
+| Kubernetes context and cluster | Verify when checked | Use `kubectl config current-context`, `kubectl cluster-info`, and `kubectl get nodes` |
+| PayFlow Deployment | Verify from rollout output | Confirm desired and ready replicas |
+| PostgreSQL Deployment | Verify from rollout output | Confirm database pod readiness |
+| Redis Deployment | Verify from rollout output | Confirm Redis pod readiness |
+| Services | Verify from `kubectl get svc` | Confirm expected internal Services |
+| PersistentVolumeClaims | Verify from `kubectl get pvc` | Confirm required claims are Bound |
+| ConfigMaps and Secrets | Verify from manifests | Do not expose Secret values |
+| Readiness and liveness probes | Verify from pod description | Confirm probes are configured and passing |
+| Pod self-healing | Verify with a controlled test | Do not claim full validation without testing |
+| Rolling updates | Verify with rollout history/status | Confirm Deployment rollout behavior |
+| HPA | Configuration verified if present | Load-based scaling requires dedicated testing |
+| PDB | Configuration verified if present | Confirm intended disruption behavior |
+| Gateway and HTTPRoute | Verify if configured | Confirm Gateway API resources and routing |
+| Skaffold | Verify command and exit status | Confirm test gate, build, deploy, and rollout |
+| Metrics Server | Verify separately | Required for `kubectl top` and HPA metrics |
+
+#### Validation Boundaries
+
+Unless separately tested, do not claim full validation of:
+
+- HPA scale-up under sustained load
+- HPA scale-down after load decreases
+- PostgreSQL backup and restore
+- Redis recovery after restart
+- Full Gateway API traffic routing
+- TLS termination
+- Production-grade security
+- Multi-node failure recovery
+- Disaster recovery
+- Persistent-volume recovery
+- All provider failure scenarios
+
+Detailed Documentation is available at:
+
+| Topic                          | Documentation                                                        |
+| ------------------------------ |----------------------------------------------------------------------|
+| Kubernetes Architecture        | [Architecture](./docs/kubernetes/architecture.md)                    |
+| Skaffold Workflow              | [Skaffold](./docs/kubernetes/skaffold.md)                                        |
+| Deployment & Access            | [Deployment and Access](./docs/kubernetes/deployment-and-access.md)              |
+| HPA & Scaling                  | [Scaling and HPA](./docs/kubernetes/scaling-and-hpa.md)                          |
+| Self-Healing & Rolling Updates | [Self-Healing and Rolling Updates](./docs/kubernetes/self-healing-and-rolling-updates.md) |
+| Persistent Storage             | [Persistent Storage](./docs/kubernetes/persistent-storage.md)                    |
+| Backup & Recovery              | [Backup and Recovery](./docs/kubernetes/backup-and-recovery.md)                  |
+| Security                       | [Security](./docs/kubernetes/security.md)                                             |
+| Observability                  | [Observability](./docs/kubernetes/observability.md)                                   |
+| Resilience Testing             | [Resilience Testing](./docs/kubernetes/resilience-testing.md)                         |
+| Cleanup & Troubleshooting      | [Cleanup and Troubleshooting](./docs/kubernetes/cleanup-and-troubleshooting.md)       |
+| Production Considerations      | [Production Considerations](./docs/kubernetes/production-considerations.md)           |
+
 
 ---
 
@@ -776,6 +1235,79 @@ The Compose setup will provide:
 
 No separate PostgreSQL or Redis installation should be required for the complete Docker setup.
 
+## Docker and Kubernetes run
+### Kubernetes Prerequisites
+
+The Kubernetes deployment requires:
+
+- Docker Desktop with Kubernetes enabled
+- Docker daemon running
+- Java 21
+- Maven
+- `kubectl`
+- Skaffold
+- A valid Kubernetes context
+- Sufficient CPU and memory allocated to Docker Desktop
+- Access to the required Docker images or permission to build them locally
+
+Verify the active Kubernetes context:
+
+```bash
+kubectl config current-context
+```
+
+Verify the cluster:
+
+```bash
+kubectl cluster-info
+kubectl get nodes
+```
+
+Verify Skaffold:
+
+```bash
+skaffold version
+```
+
+Verify Maven:
+
+```bash
+mvn -version
+```
+
+---
+## Deployment & Kubernetes
+
+PayFlow supports the following runtime options:
+
+- Standalone Spring Boot application
+- Docker Compose-based local deployment
+- Kubernetes deployment using Skaffold
+
+### Deployment Overview
+
+The Skaffold workflow coordinates:
+
+```text
+Maven test gate
+    → Docker image build
+    → Image tag generation
+    → Kubernetes manifest deployment
+    → Rollout
+    → Runtime validation
+```
+
+Kubernetes manifests are maintained under:
+
+```text
+k8s/
+```
+
+Detailed Kubernetes documentation is maintained under:
+
+```text
+docs/kubernetes/
+```
 ---
 
 # Configuration & Secrets
@@ -1038,12 +1570,9 @@ The Redis session records the refresh-token lifecycle.
 A dedicated non-production ADMIN credential is provided so the ADMIN APIs can be tested directly.
 
 ```text
-Email:    admin@example.com
-Password: ChangeMeBeforePublishing
+Email:    rochakshrivastav02@gmail.com
+Password: abcd1234
 ```
-
-> ⚠️ **Dummy credential:** Replace this with a dedicated non-production demo ADMIN account before publishing the final README. Never expose a real production credential.
-
 Log in using the credential above and use the returned access token as:
 
 ```http
@@ -1059,8 +1588,6 @@ POST /api/admin/users
 ```
 
 The server assigns the `ADMIN` role; the caller cannot self-select the role through the public registration API.
-
-> Replace the placeholders above with the dedicated demo credential before publishing the final README. Never use a production credential here.
 
 
 ## JWT Access Tokens
@@ -3246,7 +3773,14 @@ This would complement the synchronous payment orchestration path and allow suita
 
 ## Architecture
 
+### Docker compose architecture
+
 ![PayFlow Architecture](./docs/architecture_diagram.png)
+
+### Docker compose architecture
+
+![PayFlow kubernetes Architecture](./docs/architecture_kubernetes_diagram.png)
+
 
 ## Payment Happy Flow
 
@@ -3297,27 +3831,26 @@ The implementation is the source of truth.
 If the README, Swagger, Postman collection, or diagrams disagree with the code, the documentation should be updated to match the implementation.
 
 ---
-
-# Final Publication Checklist
-
-Before publishing the repository, replace all demonstration values with the final project values:
-
-- [ ] Final GitHub repository URL
-- [ ] Final PostgreSQL Docker image URL
-- [ ] Final Redis Docker image URL
-- [ ] Final Docker Compose file/link
-- [ ] Final Postman collection path
-- [ ] Dedicated non-production ADMIN credential
-- [ ] Verify Razorpay test-mode configuration
-- [ ] Remove all real secrets and credentials
-- [ ] Verify architecture image path
-- [ ] Verify `docs/architecture/happyflow.gif`
-- [ ] Run the full automated test suite
-- [ ] Verify Swagger/OpenAPI
-- [ ] Verify standalone setup
-- [ ] Verify Docker Compose setup
-- [ ] Confirm README examples match the final DTOs/API responses
-
 # License
 
-Add the final project license here.
+MIT License
+
+Copyright (c) 2026 Rochak Shrivastav
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
