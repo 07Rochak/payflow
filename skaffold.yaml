@@ -25,13 +25,26 @@ build:
 
 manifests:
   rawYaml:
-    - k8s/namespace.yaml
+    # Namespace and persistent storage are intentionally managed
+    # outside Skaffold so `skaffold delete` does not destroy data.
     - k8s/config/*.yaml
-    - k8s/payflow/*.yaml
-    - k8s/postgres/*.yaml
+
+    # PayFlow application
+    - k8s/payflow/deployment.yaml
+    - k8s/payflow/service.yaml
+    - k8s/payflow/hpa.yaml
+    - k8s/payflow/pdb.yaml
+    - k8s/payflow/serviceAccount.yaml
+
+    # PostgreSQL
+    - k8s/postgres/deployment.yaml
+    - k8s/postgres/service.yaml
+
+    # Redis
     - k8s/redis/deployment.yaml
-    - k8s/redis/pvc.yaml
     - k8s/redis/service.yaml
+
+    # Gateway
     - k8s/gateway/*.yaml
 
 deploy:
