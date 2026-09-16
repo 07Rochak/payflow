@@ -10,10 +10,11 @@ The local environment uses Docker Desktop with Kubernetes enabled.
 
 The architecture should be thought of as:
 
-Docker Desktop
-└── Kubernetes Cluster
+    Docker Desktop
     │
-    ├── envoy-gateway-system
+    └── Kubernetes Cluster
+    │
+    ├────── envoy-gateway-system
     │   └── Envoy Gateway infrastructure
     │
     ├── payflow
@@ -72,7 +73,7 @@ A Deployment manages Payflow's Pods.
 
 Conceptually:
 
-Deployment
+    Deployment
     │
     ├── Pod
     ├── Pod
@@ -130,9 +131,9 @@ Service
 
 For Payflow:
 
-payflow Service
-      │
-      └── Payflow Pod :8080
+    payflow Service
+          │
+          └── Payflow Pod :8080
 
 
 The Service remains stable even if the underlying Pod is recreated.
@@ -168,25 +169,25 @@ namespace: analytics
 
 For example:
 
-Kubernetes Cluster
-│
-├── payflow
-│   ├── Deployment
-│   ├── Pods
-│   ├── Service
-│   └── Gateway resources
-│
-├── ecommerce
-│   ├── Deployment
-│   ├── Pods
-│   ├── Service
-│   └── Gateway resources
-│
-└── analytics
-    ├── Deployment
-    ├── Pods
-    ├── Service
-    └── Gateway resources
+    Kubernetes Cluster
+           │
+           ├── payflow
+           │   ├── Deployment
+           │   ├── Pods
+           │   ├── Service
+           │   └── Gateway resources
+           │
+           ├── ecommerce
+           │   ├── Deployment
+           │   ├── Pods
+           │   ├── Service
+           │   └── Gateway resources
+           │
+           └── analytics
+           ├── Deployment
+           ├── Pods
+           ├── Service
+           └── Gateway resources
 
 
 This prevents application resources from becoming unnecessarily mixed together.
@@ -260,13 +261,13 @@ Payflow currently has its own Gateway resource.
 
 Conceptually:
 
-Payflow namespace
-│
-├── Gateway
-│     name: payflow-gateway
-│
-└── HTTPRoute
-      name: payflow-route
+    Payflow namespace
+            │
+            ├── Gateway
+            │     name: payflow-gateway
+            │
+            └── HTTPRoute
+                  name: payflow-route
 
 
 The Gateway can expose a listener such as:
@@ -276,23 +277,23 @@ HTTP :80
 
 Traffic can then flow:
 
-Browser / Postman
-        │
-        │ http://localhost
-        ▼
-   Envoy Proxy
-        │
-        ▼
- payflow-gateway
-        │
-        ▼
-  payflow HTTPRoute
-        │
-        ▼
- payflow Service :8080
-        │
-        ▼
-  Payflow Pod :8080
+    Browser / Postman
+            │
+            │ http://localhost
+            ▼
+       Envoy Proxy
+            │
+            ▼
+     payflow-gateway
+            │
+            ▼
+      payflow HTTPRoute
+            │
+            ▼
+     payflow Service :8080
+            │
+            ▼
+      Payflow Pod :8080
 
 ## 9. allowedRoutes Is Important
 
@@ -330,14 +331,14 @@ does not automatically attach to it.
 
 Therefore:
 
-payflow
-│
-├── payflow-gateway
-└── payflow-route        ✅ allowed
+    payflow
+    │
+    ├── payflow-gateway
+    └── payflow-route        ✅ allowed
 
-ecommerce
-│
-└── ecommerce-route      ❌ not automatically attached
+    ecommerce
+    │
+    └── ecommerce-route      ❌ not automatically attached
 
 
 This is desirable for application isolation.
@@ -355,35 +356,35 @@ namespace: ecommerce
 
 and keep its resources there:
 
-ecommerce
-│
-├── Deployment
-├── Pods
-├── Service
-├── Gateway
-└── HTTPRoute
+    ecommerce
+        │
+        ├── Deployment
+        ├── Pods
+        ├── Service
+        ├── Gateway
+        └── HTTPRoute
 
 
 The desired architecture becomes:
 
-Kubernetes Cluster
-│
-├── envoy-gateway-system
-│   └── Shared Envoy Gateway infrastructure
-│
-├── payflow
-│   ├── Payflow Deployment
-│   ├── Payflow Pods
-│   ├── Payflow Service
-│   ├── payflow-gateway
-│   └── payflow-route
-│
-└── ecommerce
-    ├── Ecommerce Deployment
-    ├── Ecommerce Pods
-    ├── Ecommerce Service
-    ├── ecommerce-gateway
-    └── ecommerce-route
+    Kubernetes Cluster
+        │
+        ├── envoy-gateway-system
+        │   └── Shared Envoy Gateway infrastructure
+        │
+        ├── payflow
+        │   ├── Payflow Deployment
+        │   ├── Payflow Pods
+        │   ├── Payflow Service
+        │   ├── payflow-gateway
+        │   └── payflow-route
+        │
+        └── ecommerce
+            ├── Ecommerce Deployment
+            ├── Ecommerce Pods
+            ├── Ecommerce Service
+            ├── ecommerce-gateway
+            └── ecommerce-route
 
 
 The applications can use the same Envoy Gateway infrastructure without becoming one application.
@@ -436,31 +437,31 @@ Ecommerce Secrets
 
 Avoid this mental model:
 
-Payflow
-└── Install Envoy
+     Payflow
+        └── Install Envoy
 
-Ecommerce
-└── Install Envoy
+    Ecommerce
+        └── Install Envoy
 
-Analytics
-└── Install Envoy
+    Analytics
+        └── Install Envoy
 
 
 Instead use:
 
-Kubernetes Cluster
-│
-└── Envoy Gateway
-       │
-       ├── Payflow Gateway
-       │      └── Payflow HTTPRoute
-       │
-       ├── Ecommerce Gateway
-       │      └── Ecommerce HTTPRoute
-       │
-       └── Analytics Gateway
-              └── Analytics HTTPRoute
-
+    Kubernetes Cluster
+        │
+        └── Envoy Gateway
+               │
+               ├── Payflow Gateway
+               │      └── Payflow HTTPRoute
+               │
+               ├── Ecommerce Gateway
+               │      └── Ecommerce HTTPRoute
+               │
+               └── Analytics Gateway
+                      └── Analytics HTTPRoute
+        
 
 Envoy Gateway is shared infrastructure.
 
@@ -522,26 +523,26 @@ If you're finished working and want to stop everything, you can stop Docker Desk
 
 Conceptually:
 
-Docker Desktop ON
-       │
-       ▼
-Kubernetes
-       │
-       ├── Envoy Gateway
-       ├── Payflow
-       ├── Redis
-       ├── PostgreSQL
-       └── Other applications
+    Docker Desktop ON
+           │
+           ▼
+    Kubernetes
+           │
+           ├── Envoy Gateway
+           ├── Payflow
+           ├── Redis
+           ├── PostgreSQL
+           └── Other applications
 
 
 When Docker Desktop/Kubernetes is stopped:
 
-Docker Desktop OFF
-       │
-       ▼
-Kubernetes unavailable
-       │
-       └── workloads stop running
+    Docker Desktop OFF
+           │
+           ▼
+    Kubernetes unavailable
+           │
+           └── workloads stop running
 
 
 Starting Docker Desktop/Kubernetes again allows Kubernetes to reconcile the existing resources and recreate the required Pods.
@@ -561,16 +562,16 @@ kubectl port-forward -n payflow service/payflow 8080:8080
 
 Traffic:
 
-localhost:8080
-      │
-      ▼
-kubectl port-forward
-      │
-      ▼
-payflow Service
-      │
-      ▼
-Payflow Pod
+    localhost:8080
+          │
+          ▼
+    kubectl port-forward
+          │
+          ▼
+    payflow Service
+          │
+          ▼
+    Payflow Pod
 
 
 This is useful for direct debugging.
@@ -581,22 +582,22 @@ Method 2 — Gateway API
 
 With the Gateway configured:
 
-localhost:80
-      │
-      ▼
-Envoy
-      │
-      ▼
-Gateway
-      │
-      ▼
-HTTPRoute
-      │
-      ▼
-payflow Service
-      │
-      ▼
-Payflow Pod
+    localhost:80
+          │
+          ▼
+        Envoy
+          │
+          ▼
+        Gateway
+          │
+          ▼
+      HTTP Route
+          │
+          ▼
+    payflow Service
+          │
+          ▼
+      Payflow Pod
 
 
 This is the preferred architecture for testing traffic through the application's actual ingress path.
@@ -727,31 +728,31 @@ kubectl get all -A
 
 A reasonable structure is:
 
-project/
-│
-├── README.md
-│
-├── k8s/
-│   │
-│   ├── namespace.yaml
-│   │
-│   ├── app/
-│   │   ├── deployment.yaml
-│   │   └── service.yaml
-│   │
-│   ├── gateway/
-│   │   ├── gateway.yaml
-│   │   └── httproute.yaml
-│   │
-│   ├── config/
-│   │   ├── configmap.yaml
-│   │   └── secret.yaml
-│   │
-│   └── data/
-│       ├── postgres.yaml
-│       └── redis.yaml
-│
-└── ...
+    project/
+    │
+    ├── README.md
+    │
+    ├── k8s/
+    │   │
+    │   ├── namespace.yaml
+    │   │
+    │   ├── app/
+    │   │   ├── deployment.yaml
+    │   │   └── service.yaml
+    │   │
+    │   ├── gateway/
+    │   │   ├── gateway.yaml
+    │   │   └── httproute.yaml
+    │   │
+    │   ├── config/
+    │   │   ├── configmap.yaml
+    │   │   └── secret.yaml
+    │   │
+    │   └── data/
+    │       ├── postgres.yaml
+    │       └── redis.yaml
+    │
+    └── ...
 
 
 The exact structure can evolve, but keeping application resources organized makes future maintenance easier.
@@ -889,10 +890,10 @@ The environment should evolve toward:
         ┌────────────────┴────────────────┐
         │                                 │
         ▼                                 ▼
-Shared Infrastructure              Applications
+    Shared Infrastructure              Applications
         │                                 │
         ▼                                 │
-Envoy Gateway                           │
+    Envoy Gateway                           │
         │                                 │
         ├──────────────┬──────────────────┤
         │              │                  │

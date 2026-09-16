@@ -1462,7 +1462,7 @@ Try It Out → Disabled
 ```
 
 Swagger is therefore used as API documentation/reference rather than as the primary API execution workflow.
-
+[Swagger Doumentation](https://github.com/07Rochak/payflow/blob/main/SWAGGER_DOCUMENTATION.md)
 ---
 
 # Application Access
@@ -2164,9 +2164,7 @@ Health and info are publicly permitted by the current security configuration; me
 
 # Payment Happy Flow
 
-![PayFlow Payment Happy Flow](docs/architecture/happyflow.gif)
-
-> The final repository should use the actual GIF filename committed under `docs/architecture/`.
+![PayFlow Payment Happy Flow](docs/happyflow.gif)
 
 The payment demonstration is the main business flow of PayFlow.
 
@@ -3828,7 +3826,6 @@ Happy-Flow Demonstration
 
 The implementation is the source of truth.
 
-If the README, Swagger, Postman collection, or diagrams disagree with the code, the documentation should be updated to match the implementation.
 
 ---
 # License
