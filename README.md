@@ -93,17 +93,19 @@
 
 ## 🔗 Project Links
 
-| Resource                               | Link                                                                                                                      |
-|----------------------------------------|---------------------------------------------------------------------------------------------------------------------------|
-| Source Repository                      | [GitHub](https://github.com/07Rochak/payflow)                                                                             |
-| Docker Compose Architecture Diagram    | [`docs/payflow-architecture.png`](https://github.com/07Rochak/payflow/blob/main/docs/architecture_diagram.png)            |
-| Kubernetes Docker Architecture Diagram | [`docs/payflow-architecture.png`](https://github.com/07Rochak/payflow/blob/main/docs/architecture_kubernetes_diagram.png) |
-| Payment Happy Flow                     | [`docs/happyflow.gif`](https://github.com/07Rochak/payflow/blob/main/docs/happyflow.gif)                                  |
-| Postman Collection                     | [`docs/payflow-postman-collection.json`](https://github.com/07Rochak/payflow/blob/main/docs/Payflow.postman_collection)   |
-| Docker Compose                         | [`docker-compose.yml`](https://github.com/07Rochak/payflow/blob/main/docker-compose.yml)                                  |
-| Swagger UI                             | [localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)                                                   |
-| OpenAPI JSON                           | [localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)                                                           |
-
+| Resource                                   | Link                                                                                                                     |
+|--------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| Source Repository                          | [GitHub](https://github.com/07Rochak/payflow)                                                                            |
+| Docker Compose Architecture Diagram        | [`docs/payflow-architecture.png`](https://github.com/07Rochak/payflow/blob/main/docs/architecture_diagram.png)           |
+| Kubernetes Docker Architecture Diagram     | [`docs/payflow-architecture.png`](https://github.com/07Rochak/payflow/blob/main/docs/architecture_kubernetes_diagram.png) |
+| Payment Happy Flow                         | [`docs/happyflow.gif`](https://github.com/07Rochak/payflow/blob/main/docs/happyflow.gif)                                 |
+| Postman Collection                         | [`docs/payflow-postman-collection.json`](https://github.com/07Rochak/payflow/blob/main/docs/Payflow.postman_collection)  |
+| Docker Compose                             | [`docker-compose.yml`](https://github.com/07Rochak/payflow/blob/main/docker-compose.yml)                                 |
+| Swagger UI                                 | [localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)                                                  |
+| OpenAPI JSON                               | [localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)                                                          |
+| PayFlow App (on DockerHub)                 | `07rochak/payflow:1.1.0` |
+| PostgreSQL (with seed data) (on DockerHub) | `07rochak/payflow-postgres:latest` |
+| Redis (on DockerHub)               | `07rochak/payflow-redis:latest` |  
 
 ---
 
@@ -757,7 +759,7 @@ or access on Docker Hub at:
 https://hub.docker.com/repository/docker/07rochak/payflow-postgres/general
 ```
 
-Start the container using the **PostgreSQL Docker startup command provided in `application.properties`**.
+Start the container using the **PostgreSQL Docker startup command provided in `application.properties`** or via Docker Desktop.
 
 The commented startup command in the repository is the source of truth for the required:
 
@@ -784,7 +786,7 @@ or access on Docker hub at:
 https://hub.docker.com/repository/docker/07rochak/payflow-redis/general
 ```
 
-Start the container using the **Redis Docker startup command provided in `application.properties`**.
+Start the container using the **Redis Docker startup command provided in `application.properties`** or via Docker desktop.
 
 The commented command contains the exact image and runtime configuration required by PayFlow.
 
@@ -842,24 +844,33 @@ Docker Compose
 └── Redis :6379
 ```
 
-### Docker Hub
+Docker Compose pulls all three images automatically — no manual pulls needed.
 
-#### PayFlow Application Image
+### Download Docker Compose File
 
-- Docker image: `07rochak/payflow:1.1.0`
-- Docker Hub repository: https://hub.docker.com/repository/docker/07rochak/payflow/general
+Download the Compose file into an empty folder on your machine:
 
-Pull the PayFlow application image:
-
+**Linux / Mac**
 ```bash
-docker pull 07rochak/payflow:1.1.0
+curl -O https://raw.githubusercontent.com/07Rochak/payflow/main/docker-compose.yml
 ```
+
+**Windows (PowerShell)**
+```powershell
+Invoke-WebRequest -Uri https://raw.githubusercontent.com/07Rochak/payflow/main/docker-compose.yml -OutFile docker-compose.yml
+```
+
+Or download it manually from [here](https://raw.githubusercontent.com/07Rochak/payflow/main/docker-compose.yml) and save it as `docker-compose.yml`.
 
 ### Start the complete environment
 
 ```bash
 docker compose up -d
 ```
+
+This pulls all three images from Docker Hub and starts them together.
+The PostgreSQL image includes pre-seeded data — the demo admin account
+is available immediately after startup.
 
 ### Verify containers
 
@@ -3699,7 +3710,6 @@ The planned complete runtime moves the application itself into Docker Compose.
 
 # Known Limitations
 
-The current project does not yet include the final Docker Compose runtime configuration.
 
 The following are intentionally deferred rather than presented as implemented:
 
@@ -3798,7 +3808,6 @@ http://localhost:8080/v3/api-docs
 
 ## Postman
 
-The repository will contain an importable JSON collection:
 
 ```text
 docs/postman/Payflow.postman_collection

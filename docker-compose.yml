@@ -1,7 +1,7 @@
 services:
 
   postgres:
-    image: postgres:15
+    image: 07rochak/payflow-postgres:latest
     environment:
       POSTGRES_DB: mydb
       POSTGRES_USER: myuser
@@ -19,7 +19,7 @@ services:
       start_period: 10s
 
   redis:
-    image: redis/redis-stack-server:latest
+    image: 07rochak/payflow-redis:latest
     ports:
       - "6379:6379"
     healthcheck:
@@ -30,21 +30,16 @@ services:
       start_period: 10s
 
   payflow:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: payflow:local
+    image: 07rochak/payflow:1.1.0
     ports:
       - "8080:8080"
     environment:
-      # Docker service discovery
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mydb
+      SPRING_DATASOURCE_USERNAME: myuser
+      SPRING_DATASOURCE_PASSWORD: mypassword
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
     volumes:
-      # Preserve PayFlow's existing Logback file + .gz rollover structure.
-      # Application writes to /app/logs inside the container.
-      # Files remain available under ./logs on the host.
       - ./logs:/app/logs
     depends_on:
       postgres:
@@ -54,5 +49,3 @@ services:
 
 volumes:
   postgres_data:
-    external: true
-    name: 1069350866fcccc944d81bdb3152055f1aeb47108d5807c65357e12e25c9516c

@@ -1,0 +1,2 @@
+FROM postgres:15
+COPY postgres-migration.sql /docker-entrypoint-initdb.d/01-postgres-migration.sql
