@@ -1,6 +1,16 @@
 # PayFlow — Payment Orchestration API
 
-> **Production-oriented Spring Boot payment orchestration backend** for authentication, Redis-backed session management, wallets, transactions, and Razorpay payment processing. It is also a cloud-native payment application built with Spring Boot and designed to demonstrate containerization, observability, and Kubernetes deployment practices.
+> A Spring Boot 4 / Java 21 backend that sits between a client application
+and Razorpay, owning wallet state, payment lifecycle, transaction history
+and session security while keeping provider-specific communication behind
+a single boundary. 
+>
+>Built around failure cases rather than the happy path: refresh-token
+rotation with reuse detection, device- and IP-bound Redis sessions,
+retry policy that distinguishes transient provider faults from declines,
+correlation IDs traceable across auth, wallet and provider logs, and
+duplicate-payment protection before any wallet is credited.
+
 
 [![Java](https://img.shields.io/badge/Java-21-orange)](#technology-stack)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.0.5-brightgreen)](#technology-stack)
@@ -10,6 +20,39 @@
 [![Razorpay](https://img.shields.io/badge/Payments-Razorpay-3395ff)](#razorpay-integration)
 [![Docker](https://img.shields.io/badge/Docker-Containerized-2496ed)](#docker--runtime-architecture)
 [![Swagger](https://img.shields.io/badge/API-Swagger%2FOpenAPI-85ea2d)](#swagger--openapi)
+
+---
+
+## What you can do in five minutes
+
+| | |
+| --- | --- |
+| **See it work** | [Payment happy flow (GIF)](docs/happyflow.gif) — login, Razorpay test checkout, signature verification, wallet credit |
+| **See the shape** | [Architecture diagram](docs/architecture_diagram.png) · [Kubernetes architecture](docs/architecture_kubernetes_diagram.png) |
+| **Run it** | `curl -O https://raw.githubusercontent.com/07Rochak/payflow/main/docker-compose.yml && docker compose up -d` → http://localhost:8080 |
+| **Read the API** | [Swagger reference](http://localhost:8080/swagger-ui.html) once running · [Postman collection](docs/Payflow.postman_collection) |
+
+Demo ADMIN login, wallet limits and endpoint reference are below.
+
+---
+
+### Engineering decisions worth reading about
+
+- [Stateless access tokens + stateful Redis refresh sessions](#stateless-access-token--stateful-refresh-session) — why the two tokens have different storage models
+- [Refresh-token rotation and reuse detection](#refresh-token-rotation) — a replayed token deletes the session rather than being rejected
+- [Razorpay retry policy](#retry-policy) — 5xx, timeouts and network faults retry; a 4xx never does
+- [Correlation IDs](#correlation-ids-1) — tracing one payment across six log files without tracing infrastructure
+- [Known limitations](#known-limitations) — what is deliberately not implemented
+
+### Runtime
+
+Standalone · Docker Compose · Kubernetes via Skaffold
+(HPA, PersistentVolumeClaims, Pod Disruption Budget, readiness/liveness
+probes, Gateway API + Envoy). Full Kubernetes documentation: [`docs/kubernetes/`](docs/kubernetes/)
+
+**Status:** development/portfolio implementation with production-oriented
+design. See [Production Considerations](#production-considerations) for what
+a real deployment would additionally require.
 
 ---
 
@@ -341,7 +384,6 @@ The diagram intentionally avoids listing every Java class. The sections below ex
 
 PayFlow can also run on a local Kubernetes cluster using Kubernetes Deployments, Services, ConfigMaps, Secrets, PersistentVolumeClaims, readiness and liveness probes, and Skaffold-based deployment automation.
 
-The Kubernetes architecture diagram is maintained separately from the Horizontal Pod Autoscaler behavior diagram. The HPA diagram can be added later as a separate scaling-focused diagram.
 The main components are:
 
 - **PayFlow Deployment:** Runs the Spring Boot application pods.
@@ -834,7 +876,7 @@ http://localhost:8080/swagger-ui.html
 
 ## Option 2 — Complete Docker Compose Setup
 
-The complete Docker version is the planned containerized runtime:
+PayFlow, PostgreSQL and Redis run together as containers:
 
 ```text
 Docker Compose
@@ -1159,43 +1201,57 @@ kubectl delete -f k8s/
 
 > Use cleanup carefully because deleting resources may affect application state.
 
-### Kubernetes Validation Status
+## Verification Status
 
-Document validation according to what has actually been verified.
+HPA behaviour was tested against a local Kubernetes cluster
+(Docker Desktop) with Metrics Server installed.
 
-| Area | Status | Notes |
-|---|---|---|
-| Kubernetes context and cluster | Verify when checked | Use `kubectl config current-context`, `kubectl cluster-info`, and `kubectl get nodes` |
-| PayFlow Deployment | Verify from rollout output | Confirm desired and ready replicas |
-| PostgreSQL Deployment | Verify from rollout output | Confirm database pod readiness |
-| Redis Deployment | Verify from rollout output | Confirm Redis pod readiness |
-| Services | Verify from `kubectl get svc` | Confirm expected internal Services |
-| PersistentVolumeClaims | Verify from `kubectl get pvc` | Confirm required claims are Bound |
-| ConfigMaps and Secrets | Verify from manifests | Do not expose Secret values |
-| Readiness and liveness probes | Verify from pod description | Confirm probes are configured and passing |
-| Pod self-healing | Verify with a controlled test | Do not claim full validation without testing |
-| Rolling updates | Verify with rollout history/status | Confirm Deployment rollout behavior |
-| HPA | Configuration verified if present | Load-based scaling requires dedicated testing |
-| PDB | Configuration verified if present | Confirm intended disruption behavior |
-| Gateway and HTTPRoute | Verify if configured | Confirm Gateway API resources and routing |
-| Skaffold | Verify command and exit status | Confirm test gate, build, deploy, and rollout |
-| Metrics Server | Verify separately | Required for `kubectl top` and HPA metrics |
+### Scale-up
 
+Under sustained load, memory utilisation crossed the 80% target and the
+HPA scaled the PayFlow deployment from 2 replicas to <N>.
+
+Observed HPA state during the test:
+
+CPU:     249% / 70%
+Memory: 78% / 80%
+Min:     2
+Max:     5
+Current: 5
+
+Normal Scale:
+CPU:     2% / 70%
+Memory: 70% / 80%
+Min:     2
+Max:     5
+Current: 3
+
+### Scale-down
+
+After load was removed, utilisation fell below target and the HPA
+returned the deployment to 3 replicas within 320 seconds, consistent
+with the configured stabilisation window.
+
+### Scope of the test
+
+This was a single-node local cluster. The test validates that the HPA
+reacts to real resource pressure and that new pods pass readiness
+probes and serve traffic. It does not characterise application
+throughput at each replica count, and PostgreSQL and Redis remain
+single-replica — horizontal scaling of the application layer does not
+scale the data layer.
 #### Validation Boundaries
 
-Unless separately tested, do not claim full validation of:
-
-- HPA scale-up under sustained load
-- HPA scale-down after load decreases
-- PostgreSQL backup and restore
-- Redis recovery after restart
-- Full Gateway API traffic routing
-- TLS termination
-- Production-grade security
-- Multi-node failure recovery
-- Disaster recovery
-- Persistent-volume recovery
-- All provider failure scenarios
+- HPA scale-up under sustained load: Verified after adding significant load
+- HPA scale-down after load decreases: Verified after load decreased
+- PostgreSQL backup and restore: PVC functionality enabled in container which ensures that every restart and rollout have seed values.
+- Redis recovery after restart:  sequential starting with rolling update functionality to ensure recovery after restart or deletion of pod.
+- Full Gateway API traffic routing: Istio envoy gateway configuration.
+- TLS termination: Verified after deleting and reinitializing pods
+- Production-grade security: Security configs and authentication annotation usage
+- Multi-node failure recovery: Deletion of pods and observing their recovery to stabilize app
+- Persistent-volume recovery:  Embedded in container to recovered with container recovery
+- All provider failure scenarios: simultaneous deletion of pods with recovery.
 
 Detailed Documentation is available at:
 
@@ -1346,8 +1402,6 @@ spring.application.name=payflow
 ```properties
 server.port=8080
 ```
-
-> The final application is intended to run on port `8080`.
 
 ## PostgreSQL
 
@@ -1578,14 +1632,19 @@ The Redis session records the refresh-token lifecycle.
 
 ### Demo ADMIN Credential
 
-A dedicated non-production ADMIN credential is provided so the ADMIN APIs can be tested directly.
+A throwaway, non-production ADMIN account is seeded into the published
+PostgreSQL image so the ADMIN APIs can be exercised without manual setup.
 
-```text
-Email:    rochakshrivastav02@gmail.com
+```bash
+Email:    elliewillams@gmail.com
 Password: abcd1234
 ```
-Log in using the credential above and use the returned access token as:
 
+This credential exists only in the seeded demo image. It is not a real
+account, carries no privileges outside a local container, and is rotated
+independently of any application secret. Real deployments provision the
+initial ADMIN through environment configuration, never through a
+committed credential.
 ```http
 Authorization: Bearer <access-token>
 ```
@@ -3314,10 +3373,10 @@ The repository will contain an importable JSON collection.
 4. Configure any environment values required by the collection.
 5. Execute the requests in the recommended order.
 
-Expected repository location:
+repository location:
 
 ```text
-docs/postman/Payflow.postman_collection
+docs/Payflow.postman_collection
 ```
 
 ## Authentication
@@ -3431,7 +3490,7 @@ The following sequence is suitable for demonstrating the complete application.
 
 # Automated Testing
 
-The final project contains automated tests across unit, integration, security, API, Redis/PostgreSQL, and Razorpay reliability concerns.
+The project contains automated tests across unit, integration, security, API, Redis/PostgreSQL, and Razorpay reliability concerns.
 
 ## Test Structure
 
@@ -3502,8 +3561,7 @@ The Maven configuration includes Testcontainers support for PostgreSQL integrati
 
 The project includes Rest Assured for API integration testing.
 
-> Test counts and coverage percentages should be generated from the latest test run before being added as numeric README claims.
-
+> 66 Tests - All are passing for current version
 ---
 
 # Troubleshooting
@@ -3595,7 +3653,7 @@ Never commit Razorpay secrets.
 
 ## Admin Credential
 
-The initial administrator credential is intentionally provided separately and must not be stored in the public repository.
+A seeded non-production ADMIN credential is published intentionally so reviewers can exercise the ADMIN APIs. It is a demo-only account in a demo-only database image and grants no access to any real system.
 
 ---
 
@@ -3704,7 +3762,7 @@ Session auditing, cleanup and security monitoring are background responsibilitie
 
 PostgreSQL and Redis can run in Docker even when the Spring Boot application runs directly on the host.
 
-The planned complete runtime moves the application itself into Docker Compose.
+The application, PostgreSQL and Redis all run as containers under Docker Compose
 
 ---
 
