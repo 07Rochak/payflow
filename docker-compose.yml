@@ -30,7 +30,7 @@ services:
       start_period: 10s
 
   payflow:
-    image: 07rochak/payflow:1.1.0
+    image: 07rochak/payflow:1.1.1
     ports:
       - "8080:8080"
     environment:

@@ -25,12 +25,12 @@ duplicate-payment protection before any wallet is credited.
 
 ## What you can do in five minutes
 
-| | |
-| --- | --- |
-| **See it work** | [Payment happy flow (GIF)](docs/happyflow.gif) — login, Razorpay test checkout, signature verification, wallet credit |
-| **See the shape** | [Architecture diagram](docs/architecture_diagram.png) · [Kubernetes architecture](docs/architecture_kubernetes_diagram.png) |
+| |                                                                                                                                      |
+| --- |--------------------------------------------------------------------------------------------------------------------------------------|
+| **See it work** | [Payment happy flow (GIF)](docs/happyflow.gif) — login, Razorpay test checkout, signature verification, wallet credit                |
+| **See the shape** | [Architecture diagram](docs/architecture_diagram.png) · [Kubernetes architecture](docs/architecture_kubernetes_diagram.png)          |
 | **Run it** | `curl -O https://raw.githubusercontent.com/07Rochak/payflow/main/docker-compose.yml && docker compose up -d` → http://localhost:8080 |
-| **Read the API** | [Swagger reference](http://localhost:8080/swagger-ui.html) once running · [Postman collection](docs/Payflow.postman_collection) |
+| **Read the API** | [Swagger reference](http://localhost:8080/swagger-ui.html) once running · [Postman collection](docs/Payflow.postman_collection.json) |
 
 Demo ADMIN login, wallet limits and endpoint reference are below.
 
@@ -136,19 +136,19 @@ a real deployment would additionally require.
 
 ## 🔗 Project Links
 
-| Resource                                   | Link                                                                                                                     |
-|--------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
-| Source Repository                          | [GitHub](https://github.com/07Rochak/payflow)                                                                            |
-| Docker Compose Architecture Diagram        | [`docs/payflow-architecture.png`](https://github.com/07Rochak/payflow/blob/main/docs/architecture_diagram.png)           |
-| Kubernetes Docker Architecture Diagram     | [`docs/payflow-architecture.png`](https://github.com/07Rochak/payflow/blob/main/docs/architecture_kubernetes_diagram.png) |
-| Payment Happy Flow                         | [`docs/happyflow.gif`](https://github.com/07Rochak/payflow/blob/main/docs/happyflow.gif)                                 |
-| Postman Collection                         | [`docs/payflow-postman-collection.json`](https://github.com/07Rochak/payflow/blob/main/docs/Payflow.postman_collection)  |
-| Docker Compose                             | [`docker-compose.yml`](https://github.com/07Rochak/payflow/blob/main/docker-compose.yml)                                 |
-| Swagger UI                                 | [localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)                                                  |
-| OpenAPI JSON                               | [localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)                                                          |
-| PayFlow App (on DockerHub)                 | `07rochak/payflow:1.1.0` |
-| PostgreSQL (with seed data) (on DockerHub) | `07rochak/payflow-postgres:latest` |
-| Redis (on DockerHub)               | `07rochak/payflow-redis:latest` |  
+| Resource                                   | Link                                                                                                                         |
+|--------------------------------------------|------------------------------------------------------------------------------------------------------------------------------|
+| Source Repository                          | [GitHub](https://github.com/07Rochak/payflow)                                                                                |
+| Docker Compose Architecture Diagram        | [`docs/payflow-architecture.png`](https://github.com/07Rochak/payflow/blob/main/docs/architecture_diagram.png)               |
+| Kubernetes Docker Architecture Diagram     | [`docs/payflow-architecture.png`](https://github.com/07Rochak/payflow/blob/main/docs/architecture_kubernetes_diagram.png)    |
+| Payment Happy Flow                         | [`docs/happyflow.gif`](https://github.com/07Rochak/payflow/blob/main/docs/happyflow.gif)                                     |
+| Postman Collection                         | [`docs/payflow-postman-collection.json`](https://github.com/07Rochak/payflow/blob/main/docs/Payflow.postman_collection.json) |
+| Docker Compose                             | [`docker-compose.yml`](https://github.com/07Rochak/payflow/blob/main/docker-compose.yml)                                     |
+| Swagger UI                                 | [localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)                                                      |
+| OpenAPI JSON                               | [localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)                                                              |
+| PayFlow App (on DockerHub)                 | `07rochak/payflow:1.1.1`                                                                                                     |
+| PostgreSQL (with seed data) (on DockerHub) | `07rochak/payflow-postgres:latest`                                                                                           |
+| Redis (on DockerHub)               | `07rochak/payflow-redis:latest`                                                                                              |  
 
 ---
 
@@ -494,7 +494,6 @@ UserRepository
 WalletRepository
 PaymentRepository
 TransactionRepository
-RefreshTokenRepository
 UserSessionRepository
 ```
 
@@ -1419,8 +1418,6 @@ PostgreSQL host: localhost
 PostgreSQL port: 5432
 Database: mydb
 ```
-
-Do not publish real credentials.
 
 ## JPA / Hibernate
 
@@ -3164,89 +3161,21 @@ The Logback configuration generates separate files for the major application con
 
 ```text
 logs/
-├── application.log
-├── error.log
-├── payment.log
-├── authentication.log
-├── session.log
-└── cronjob.log
+├── payflow_application.log
+├── payflow_security.log
+├── payflow_cronjob_scheduler.log
 ```
+### Logging
 
-### `logs/application.log`
+PayFlow separates logs into three categories:
 
-General application activity, including normal application lifecycle and request-related logging.
+| Category | File | Purpose |
+|---|---|---|
+| Application | `payflow_application.log` | General application execution and request-related logs |
+| Security | `payflow_security.log` | Authentication and security-related events |
+| Cronjob / Scheduler | `payflow_cronjob_scheduler.log` | Session audit, cleanup, and security monitoring jobs |
 
-### `logs/error.log`
-
-Error-level events and failures that require investigation.
-
-Examples include:
-
-```text
-Authentication failures
-Payment failures
-Database/persistence errors
-Unexpected application exceptions
-Provider communication failures
-```
-
-### `logs/payment.log`
-
-Payment-specific activity such as:
-
-```text
-Payment order creation
-Razorpay communication
-Payment verification
-Signature verification
-Payment failures
-Retry attempts
-Duplicate-payment detection
-```
-
-### `logs/authentication.log`
-
-Authentication and authorization-related events such as:
-
-```text
-Login attempts
-Authentication results
-Token operations
-Session creation
-Refresh attempts
-Logout
-Authentication/security failures
-```
-
-### `logs/session.log`
-
-Redis/session lifecycle and security activity such as:
-
-```text
-Session creation
-Session refresh
-Session rotation
-Session deletion
-Session validation
-Device/IP validation
-Refresh-token reuse detection
-Session security events
-```
-
-### `logs/cronjob.log`
-
-Scheduled-job execution details such as:
-
-```text
-Session audit
-Session cleanup
-Session security checks
-Users scanned
-Sessions scanned
-Sessions removed
-Security warnings
-Execution duration
-```
+Logs are written to the `logs/` directory.
 
 > The exact file names and rolling/retention behavior are controlled by `src/main/resources/logback-spring.xml`.
 
@@ -3287,7 +3216,7 @@ The configured Actuator information includes:
 ```text
 Name: PayFlow
 Description: Payment Orchestration API
-Version: 1.0.0
+Version: 1.1.1
 ```
 
 ## Logging
@@ -3376,7 +3305,7 @@ The repository will contain an importable JSON collection.
 repository location:
 
 ```text
-docs/Payflow.postman_collection
+docs/Payflow.postman_collection.json
 ```
 
 ## Authentication
@@ -3561,7 +3490,8 @@ The Maven configuration includes Testcontainers support for PostgreSQL integrati
 
 The project includes Rest Assured for API integration testing.
 
-> 66 Tests - All are passing for current version
+> The current test suite contains 66 tests covering unit, integration,
+REST API, security, Redis/PostgreSQL, and Razorpay reliability scenarios.
 ---
 
 # Troubleshooting
@@ -3648,8 +3578,6 @@ Public user registration cannot assign itself ADMIN privileges.
 ## Razorpay Credentials
 
 Use Razorpay test-mode credentials for local development.
-
-Never commit Razorpay secrets.
 
 ## Admin Credential
 
@@ -3843,7 +3771,7 @@ This would complement the synchronous payment orchestration path and allow suita
 
 ![PayFlow Architecture](./docs/architecture_diagram.png)
 
-### Docker compose architecture
+### Kubernetes Skaffold architecture
 
 ![PayFlow kubernetes Architecture](./docs/architecture_kubernetes_diagram.png)
 
@@ -3868,7 +3796,7 @@ http://localhost:8080/v3/api-docs
 
 
 ```text
-docs/postman/Payflow.postman_collection
+docs/postman/Payflow.postman_collection.json
 ```
 
 ---

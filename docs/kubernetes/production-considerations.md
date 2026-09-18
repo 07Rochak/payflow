@@ -64,7 +64,7 @@ Before a real production deployment, additional work would be required.
 * Production Razorpay credentials.
 * Payment reconciliation.
 * Provider failure handling.
-* Idempotency.
+* Duplicate payment protection.
 * Transaction consistency.
 * Operational monitoring.
 

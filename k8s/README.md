@@ -21,8 +21,6 @@ Non-sensitive configuration is stored in `ConfigMap`.
 
 Sensitive runtime configuration is stored in a Kubernetes `Secret`.
 
-The repository should not contain real credential values.
-
 ## Current phase
 
 This directory currently contains the base configuration and persistent storage resources.

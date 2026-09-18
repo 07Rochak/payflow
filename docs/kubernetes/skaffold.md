@@ -78,7 +78,7 @@ Record the following:
 The PayFlow release image is:
 
 ```text
-07rochak/payflow:1.1.0
+07rochak/payflow:1.1.1
 ```
 
 The supporting Docker images are:
@@ -121,8 +121,8 @@ The exact behavior depends on the current `skaffold.yaml`.
 Two image identification mechanisms are used:
 
 | Image type                     | Example                                   |
-| ------------------------------ | ----------------------------------------- |
-| Docker Hub application release | `07rochak/payflow:1.1.0`                  |
+| ------------------------------ |-------------------------------------------|
+| Docker Hub application release | `07rochak/payflow:1.1.1`                  |
 | Supporting images              | `07rochak/payflow-postgres:latest`        |
 | Skaffold-generated image       | Generated automatically during deployment |
 
